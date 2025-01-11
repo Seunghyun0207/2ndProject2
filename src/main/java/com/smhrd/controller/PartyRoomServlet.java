@@ -62,3 +62,5 @@ public class PartyRoomServlet extends HttpServlet {
         request.getRequestDispatcher("partyRoom.jsp").forward(request, response);
     }
 }
+
+

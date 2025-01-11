@@ -24,7 +24,7 @@
 				</figcaption>
 			</figure>
 			<h1 class="card__heading">
-				<span class="visually-hidden">Account name:</span> <span>온도차이</span>
+				<span class="visually-hidden">Account name:</span> <span>유동회관</span>
 			</h1>
 			<form class="card__form" action="loginProcess" method="post">
 				<label for="userId" class="visually-hidden">ID:</label> <input
