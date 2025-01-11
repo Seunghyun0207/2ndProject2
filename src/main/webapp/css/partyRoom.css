@@ -1,0 +1,1096 @@
+
+@import url("https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i|IBM+Plex+Sans+Condensed:400,400i|IBM+Plex+Sans:100,100i,400,400i,700,700i|IBM+Plex+Serif:400,400i");
+.about {
+  position: fixed; /* 위치 고정: 화면 오른쪽 아래에 고정 */
+  z-index: 10;
+  bottom: 20px; /* 아래쪽 여백 증가 */
+  right: 20px; /* 오른쪽 여백 증가 */
+  width: 60px; /* 너비 확대 */
+  height: 60px; /* 높이 확대 */
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  transition: all 0.2s ease;
+}
+
+.about .bg_links {
+  width: 60px; /* 너비 확대 */
+  height: 60px; /* 높이 확대 */
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  position: absolute;
+}
+
+.about .logo {
+  width: 60px; /* 로고 크기 확대 */
+  height: 60px; /* 로고 크기 확대 */
+  z-index: 9;
+  background-size: 60%; /* 로고 배경 크기 확대 */
+  opacity: 0.9;
+  transition: all 1s 0.2s ease;
+  bottom: 0;
+  right: 0;
+}
+
+.about .social .icon {
+  width: 100%;
+  height: 100%;
+  background-size: 30px; /* 아이콘 크기 확대 */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  display: flex;
+  transition: all 0.2s ease, background-color 0.4s ease;
+  opacity: 0;
+  border-radius: 100%;
+}
+
+.about:hover {
+  width: 120px; /* 너비 확대 */
+  height: 120px; /* 높이 확대 */
+  transition: all 0.6s cubic-bezier(0.64, 0.01, 0.07, 1.65);
+}
+
+.about:hover .logo {
+  opacity: 1;
+  transition: all 0.6s ease;
+}
+
+.about:hover .social {
+  opacity: 1;
+}
+
+.about:hover .social .icon {
+  opacity: 0.9;
+}
+
+.about:hover .social:hover {
+  background-size: 35px; /* 아이콘 호버 시 크기 확대 */
+}
+
+.about:hover .social:hover .icon {
+  background-size: 70%; /* 아이콘 호버 시 배경 크기 확대 */
+}
+
+.about:hover .social.portfolio {
+  right: 0;
+  bottom: calc(100% - 60px); /* 위치 조정 */
+  transition: all 0.3s 0s cubic-bezier(0.64, 0.01, 0.07, 1.65);
+}
+
+.about:hover .social.dribbble {
+  bottom: 50%;
+  right: 50%;
+  transition: all 0.3s 0.15s cubic-bezier(0.64, 0.01, 0.07, 1.65);
+}
+
+.about:hover .social.linkedin {
+  bottom: 0;
+  right: calc(100% - 60px); /* 위치 조정 */
+  transition: all 0.3s 0.25s cubic-bezier(0.64, 0.01, 0.07, 1.65);
+}
+
+
+/* main 1*/
+/* main 2*/
+/* neutral 1*/
+/* neutral 2*/
+body {
+  background-color: #fff;
+  /* background-color: #2e2e2e; */
+  font-family: "IBM Plex Sans", sans-serif;
+  margin: 0;
+}
+
+#wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.content {
+  max-width: 600px;
+  width: 100%;
+  min-width: 260px;
+  margin: 0%;
+  margin-top: 1%; /* 테이블 사이 간격 조정 */
+  /* margin-top: 10%; */
+  transition: 0.3s ease;
+}
+@media screen and (max-width: 512px) {
+  .content {
+    margin: 0 4%;
+    margin-top: 5%;
+  }
+}
+
+/* Tabs menu */
+.tabs {
+  margin: 0;
+  background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  border-radius: 2px 2px 0px 0px;
+}
+@media screen and (max-width: 512px) {
+  .tabs {
+    height: 40px;
+  }
+}
+
+/* Tab Links */
+.tablinks {
+  background: transparent;
+  background-image: linear-gradient(90deg, transparent 70%, rgba(255, 255, 255, 0.2) 100%);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: 25%;
+  /*change depending on the number of tabs*/
+  height: 80px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-family: "IBM Plex Sans", sans-serif;
+  overflow: hidden;
+  transition: 0.3s ease;
+}
+@media screen and (max-width: 512px) {
+  .tablinks {
+    height: 40px;
+    font-size: 12px;
+  }
+}
+
+.tablinks:before {
+  background-image: linear-gradient(135deg, #7a7a7a 0%, #2dc034 100%);
+  content: "";
+  width: 100%;
+  height: 0px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: 0.3s ease-in-out;
+  z-index: 2;
+}
+
+/*tab buttons hover*/
+.tablinks:hover::before {
+  height: 100%;
+  z-index: 2;
+  bottom: 0;
+}
+@media screen and (max-width: 512px) {
+  .tablinks:hover::before {
+    height: 0;
+  }
+}
+
+/* Tab active */
+.tablinks.active {
+  background-color: white;
+  z-index: 0;
+  border-right: 0px;
+  border-left: 0px;
+  height: 110px;
+  bottom: 0px;
+  overflow: hidden;
+}
+@media screen and (max-width: 512px) {
+  .tablinks.active {
+    height: 60px;
+  }
+}
+
+.tablinks.active:before {
+  content: "";
+  width: 100%;
+  height: 5px;
+  top: 0;
+  left: 0;
+}
+
+/* Tabs text */
+.tablinks.active p,
+.tablinks.active:hover p {
+  opacity: 1;
+  background: -webkit-linear-gradient(135deg, #7a7a7a 0%, #352878 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.tablinks p {
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: 0.5s ease;
+  padding: 0;
+  margin: 0;
+  color: #686868;
+  backface-visibility: hidden;
+  font-weight: 400;
+}
+
+.tablinks:hover p {
+  color: white;
+  opacity: 1;
+}
+@media screen and (max-width: 512px) {
+  .tablinks:hover p {
+    color: #686868;
+    opacity: 0.6;
+  }
+}
+
+/* Tabs text bigger */
+.tablinks p:before {
+  content: attr(data-title);
+  position: absolute;
+  height: auto;
+  width: auto;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.1;
+  font-size: 40px;
+  transition: 1s ease-out;
+  z-index: -1;
+  font-weight: 600;
+  top: 110%;
+}
+@media screen and (max-width: 512px) {
+  .tablinks p:before {
+    display: none;
+  }
+}
+
+.tablinks:hover p:before {
+  opacity: 0.1;
+  font-size: 40px;
+  top: -80%;
+}
+
+/* tab content */
+.wrapper_tabcontent {
+  background-color: white;
+  margin-top: 0px;
+  z-index: 1;
+  position: relative;
+  opacity: 1;
+  padding: 40px 60px;
+  overflow: hidden;
+  transition: all 1s ease;
+  top: 0;
+}
+
+.tabcontent {
+  display: none;
+  min-height: 180px;
+}
+
+@keyframes tabEffect {
+  from {
+    top: -40px;
+  }
+  to {
+    top: 0px;
+  }
+}
+.tabcontent.active {
+  transition: all 1s ease;
+  display: block;
+}
+
+/* Tab content line */
+.wrapper_tabcontent:after {
+  content: "";
+  height: 5px;
+  width: 100%;
+  position: absolute;
+  background-image: linear-gradient(135deg, #7a7a7a 0%, #352878 100%);
+  left: 0;
+  bottom: 0;
+  z-index: -2;
+  transition: all 1s ease;
+}
+
+/* Title */
+.tabcontent h3 {
+  font-size: 40px;
+  top: 75px;
+  transform: rotate(90deg);
+  position: absolute;
+  left: -90px;
+  opacity: 0.1;
+  width: 200px;
+  height: 60px;
+  background: -webkit-linear-gradient(135deg, #7a7a7a 0%, #352878 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding: 0;
+  animation: city 1s ease;
+}
+@media screen and (max-width: 512px) {
+  .tabcontent h3 {
+    top: 65px;
+  }
+}
+
+@keyframes city {
+  from {
+    left: -150px;
+  }
+  to {
+    left: -90px;
+  }
+}
+/* Text*/
+.tabcontent p {
+  color: #333;
+  /* color: #686868; */
+  margin: 0;
+  padding: 0;
+  line-height: 28px;
+  font-weight: 400;
+  transition: all 1s ease;
+  animation: fadeEffect 0.6s ease;
+  width: 100%;
+  font-size: 16px;
+  font-family: "IBM Plex Sans", sans-serif;
+}
+@media screen and (max-width: 512px) {
+  .tabcontent p {
+    font-size: 14px;
+    line-height: 26px;
+  }
+}
+
+@keyframes fadeEffect {
+  from {
+    opacity: 0;
+    margin-left: 30px;
+  }
+  to {
+    opacity: 1;
+    margin-left: 0;
+  }
+}
+
+/* ✅ 추가된 고정 배경 이미지 설정 */
+body::before {
+  content: "";
+  background: url('images/1.png') no-repeat center center/cover;
+  background-attachment: fixed; /* 배경 이미지 고정 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* 모든 요소 뒤로 배치 */
+  opacity: 1; /* 투명도 조절 */
+}
+
+/* 📸 모임 게시물 스타일 */
+
+/* 제목 스타일 */
+h1 {
+  margin: 20px 0;
+  color: #333;
+}
+
+/* 업로드 컨테이너 */
+.upload-container {
+  margin: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.upload-container input[type="file"],
+.upload-container input[type="text"] {
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.upload-container button {
+  padding: 5px 10px;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.upload-container button:hover {
+  background-color: #388e3c;
+}
+
+
+/* 게시물 목록 스타일 */
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px;
+  width: 80%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post-list li {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+/* 게시물 이미지 */
+.post-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  object-fit: cover;
+}
+
+/* 게시물 텍스트 */
+.post-text {
+  font-size: 14px;
+  color: #555;
+}
+
+/* 🧊 온도차이 제목 스타일 */
+#Temperature h1 {
+  color: #fff
+}
+
+/* 📸 모임 게시물 제목 스타일 */
+
+/*  */
+/* .post-actions: 버튼들을 가로로 배치하는 컨테이너 */
+.post-actions {
+  display: flex; /* 버튼들을 수평으로 배치 */
+  justify-content: space-around; /* 버튼들 사이에 균등한 간격을 배치 */
+  margin-top: 2px; /* 위쪽에 여백 추가 */
+  margin-bottom: 15px; /* 아래쪽에 여백 추가 */
+}
+
+/* .post-actions button: 버튼 스타일 기본 설정 */
+.post-actions button {
+  padding: 10px 20px; /* 버튼 안쪽 여백 설정 (상하 10px, 좌우 20px) */
+  font-size: 16px; /* 글자 크기 설정 */
+  color: #fff; /* 글자 색을 흰색으로 설정 */
+  background-color: #0bd329; /* 기본 배경색은 파란색 */
+  border: none; /* 버튼 테두리 제거 */
+  border-radius: 5px; /* 버튼 모서리를 둥글게 처리 */
+  cursor: pointer; /* 커서를 버튼 모양으로 변경 */
+  transition: background-color 0.3s, transform 0.3s; /* 배경색과 크기 변화에 애니메이션 효과 추가 */
+}
+
+/* 버튼을 hover했을 때의 효과 */
+.post-actions button:hover {
+  background-color: #16ca19; /* 배경색을 어두운 파란색으로 변경 */
+  transform: scale(1.05); /* 버튼을 조금 키움 */
+}
+
+/* 버튼을 클릭했을 때(활성화 상태) */
+.post-actions button:active {
+  background-color: #14ce27; /* 배경색을 더 어두운 파란색으로 변경 */
+}
+
+/* 개별 버튼에 대해 색상 설정 */
+
+/* "좋아요" 버튼: 초록색 */
+.like-btn {
+  background-color: #1f7433; /* 기본 배경색 초록색 */
+}
+
+/* "좋아요" 버튼을 hover했을 때 */
+.like-btn:hover {
+  background-color: #1f7433; /* 배경색을 어두운 초록색으로 변경 */
+}
+
+/* "공유하기" 버튼: 파란색 */
+.share-btn {
+  background-color: #1f7433; /* 기본 배경색 파란색 */
+}
+
+/* "공유하기" 버튼을 hover했을 때 */
+.share-btn:hover {
+  background-color: #1f7433; /* 배경색을 어두운 파란색으로 변경 */
+}
+
+/*  */
+.comments-section {
+  position: relative; /* 부모 요소에 상대적인 위치 지정 */
+  margin-top: 20px;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 왼쪽 정렬 */
+  justify-content: flex-start; /* 위쪽으로 정렬 */
+  width: 100%;
+}
+
+#comment-input {
+  width: 70%; /* 입력란 폭을 줄여서 버튼과 옆에 배치 */
+  padding: 10px;
+  margin-right: 10px; /* 버튼과 간격 조정 */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#post-comment {
+  padding: 10px 20px;
+  background-color: #2fd016;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#post-comment:hover {
+  background-color: #14be1c;
+}
+
+.comments-list {
+  margin-top: 10px;
+  width: 100%;
+  max-height: 300px; /* 최대 높이 설정, 필요에 따라 조정 */
+  overflow-y: auto; /* 스크롤 가능하도록 설정 */
+  display: flex;
+  flex-direction: column; /* 댓글들이 위에서 아래로 추가되도록 설정 */
+}
+
+
+.comment {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.comment p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.site-name{
+  color: rgb(255, 255, 255);
+}
+
+#Meeting1 h1 {
+  color: #333
+}
+
+.meeting1-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 16px;
+  justify-items: center;
+}
+
+.photo {
+  text-align: center;
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.photo img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.photo p {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Hover 효과 */
+.photo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/*  */
+/* 게시물의 전체 스타일 */
+#Board1 .board-post {
+  width: 400px; /* 게시물 너비 */
+  border: 1px solid #ccc; /* 게시물의 테두리 */
+  margin: 20px 0; /* 상하 마진 20px */
+  padding: 15px; /* 내부 여백 */
+  border-radius: 10px; /* 둥근 모서리 */
+  background-color: #fff; /* 배경색 흰색 */
+}
+
+/* 게시물 헤더 스타일 */
+#Board1 .board-post-header {
+  display: flex; /* 수평 정렬을 위한 flexbox */
+  align-items: center; /* 수직 정렬을 위한 align-items */
+}
+
+/* 프로필 사진 스타일 */
+#Board1 .board-profile-pic {
+  width: 40px; /* 프로필 이미지의 너비 */
+  height: 40px; /* 프로필 이미지의 높이 */
+  border-radius: 50%; /* 원형으로 만들기 */
+  margin-right: 10px; /* 프로필 이미지와 사용자명 사이의 간격 */
+}
+
+/* 사용자 이름 스타일 */
+#Board1 .board-username {
+  font-weight: bold; /* 굵은 글씨 */
+}
+
+/* 게시물 이미지 스타일 */
+#Board1 .board-post-image {
+  width: 100%; /* 게시물 이미지가 부모 요소에 맞게 늘어남 */
+  height: auto; /* 비율에 맞춰 높이 자동 조정 */
+  margin: 10px 0; /* 상하 여백 10px */
+}
+
+/* 좋아요, 댓글, 공유 버튼 스타일 */
+#Board1 .board-post-actions button {
+  margin: 5px; /* 버튼 간의 간격을 조금 더 넓게 */
+  padding: 10px; /* 버튼 여백 증가 */
+  border: none;
+  background-color: #10d921;  /* 버튼 배경색 */
+  cursor: pointer;
+  font-size: 14px; /* 버튼 텍스트 크기 증가 */
+}
+
+/* 댓글 섹션 스타일 */
+#Board1 .board-comments-section {
+  margin-top: 30px; /* 댓글 섹션 위에 간격 추가 */
+}
+
+/* 댓글 입력창 스타일 */
+#Board1 .board-comment-input {
+  width: 100%; /* 입력창 너비를 80%로 확장 */
+  padding: 10px; /* 내부 여백을 더 넓게 */
+  margin-bottom: 20px; /* 버튼들과의 간격을 더 넓게 설정 */
+  font-size: 14px; /* 글씨 크기 증가 */
+  border-radius: 5px; /* 입력창의 모서리 둥글게 */
+  border: 1px solid #ccc; /* 입력창 테두리 추가 */
+}
+
+/* 댓글 리스트 스타일 */
+#Board1 .board-comments-list {
+  margin-top: 20px; /* 댓글 리스트 위에 간격 추가 */
+}
+
+/* 각 댓글 스타일 */
+#Board1 .board-comment {
+  font-size: 11px; /* 댓글 글씨 크기 */
+  margin: 5px 0; /* 상하 간격 5px */
+}
+
+/* 댓글 작성자 이름 스타일 */
+#Board1 .board-comment-author {
+  font-weight: bold; /* 작성자 이름을 굵게 표시 */
+}
+/* ==============================
+   탭 콘텐츠 기본 스타일
+   ============================== */
+
+/* 탭 콘텐츠 영역 스타일: 기본적으로 숨기고 활성화된 콘텐츠만 보이도록 설정 */
+.tabcontent {
+  display: none; /* 기본적으로 숨김 */
+  padding: 20px; /* 콘텐츠에 여백 추가 */
+  background-color: rgb(255, 255, 255); /* 배경색을 흰색으로 설정 */
+  border-radius: 8px; /* 경계선 둥글게 처리 */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  margin-top: 20px; /* 탭 간 간격 */
+  box-sizing: border-box; /* padding이 크기에 포함되도록 설정 */
+}
+
+/* 활성화된 탭 콘텐츠만 보이게 설정 */
+.tabcontent.active {
+  display: block; /* active 클래스가 있을 때만 보이게 설정 */
+}
+
+/* ==============================
+   탭 버튼 스타일
+   ============================== */
+
+/* 탭 버튼 기본 스타일 */
+/* 탭 버튼 기본 스타일 */
+.tablinks {
+  padding: 10px 20px; /* 버튼 내 여백 */
+  cursor: pointer; /* 마우스를 올렸을 때 커서 변경 */
+  font-size: 16px; /* 폰트 크기 설정 */
+  background-color: transparent; /* 배경색을 투명으로 설정 */
+  border: none; /* 경계선 없애기 */
+  box-shadow: none; /* 그림자 제거 */
+  transition: background-color 0.3s ease; /* 배경색 전환 효과 */
+}
+
+/* 마우스를 올렸을 때 배경색 변경 없애기 */
+.tablinks:hover {
+  background-color: transparent; /* hover 시 배경색 변경 없음 */
+  text-shadow: none; /* hover 시 텍스트 그림자 제거 */
+}
+
+/* 클릭 시 글씨 그림자 추가 */
+.tablinks:active {
+  color: #ffffff; /* 글자색을 흰색으로 설정 (옵션) */
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* 글씨에 그림자 추가 */
+}
+
+/* 활성화된 탭 버튼 강조 스타일 */
+.tablinks.active {
+  background-color: #4CAF50; /* 활성화된 버튼의 배경색 */
+  color: rgb(10, 0, 0); /* 활성화된 버튼의 글자색 */
+}
+
+
+/* ==============================
+   검색 바 스타일
+   ============================== */
+
+/* 검색 바 스타일 */
+.search-bar {
+  margin-bottom: 20px; /* 검색 바와 아래 항목 간의 간격 */
+}
+
+/* 검색 입력창 스타일 */
+.search-bar input {
+  padding: 10px; /* 입력창 내부 여백 */
+  width: 80%; /* 입력창 너비 */
+  border: 1px solid #ccc; /* 경계선 색상 */
+  border-radius: 5px; /* 둥글게 처리 */
+}
+
+/* 검색 버튼 스타일 */
+.search-bar button {
+  padding: 10px 20px; /* 버튼 내부 여백 */
+  background-color: #4CAF50; /* 버튼 배경색 */
+  color: white; /* 버튼 글자색 */
+  border: none; /* 경계선 없애기 */
+  border-radius: 5px; /* 둥글게 처리 */
+  cursor: pointer; /* 마우스를 올렸을 때 커서 변경 */
+}
+
+/* 검색 버튼에 마우스를 올렸을 때 색상 변경 */
+.search-bar button:hover {
+  background-color: #45a049; /* 버튼 배경색 변경 */
+}
+
+/* 전체 컨테이너 */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 피드 항목 스타일 */
+.feed-item {
+  background-color: #fff;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-name {
+  font-weight: bold;
+}
+
+.feed-date {
+  color: #888;
+}
+
+.feed-content {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.feed-image {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.feed-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 10px;
+}
+
+/* 좋아요, 공유 버튼 스타일 */
+.like-button, .share-button, .edit-button {
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.like-button:hover, .share-button:hover {
+  background-color: #45a049;
+}
+
+/* 댓글 섹션 */
+.comment-input-container {
+  display: flex; /* 입력창과 버튼을 가로로 배치 */
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: flex-start; /* 왼쪽 정렬 */
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.comment-input {
+  flex: 1; /* 입력창이 남은 공간을 모두 차지 */
+  padding: 12px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  color: #333;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.comment-submit {
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 10px; /* 버튼과 입력창 사이에 여백 */
+  white-space: nowrap; /* 버튼 텍스트가 길어지지 않도록 설정 */
+}
+
+.comment-submit:hover {
+  background-color: #45a049;
+}
+
+.comment-input:focus {
+  border-color: #4CAF50;
+}
+
+
+
+/* 댓글 리스트 */
+.comments-list {
+  margin-top: 10px;
+  width: 100%;
+  max-height: 300px; /* 최대 높이 */
+  overflow-y: auto; /* 댓글이 많으면 스크롤 표시 */
+  display: flex;
+  flex-direction: column; /* 댓글 세로로 추가 */
+}
+
+.comment-item {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-item .user-name {
+  font-weight: bold;
+  color: #333;
+}
+
+.comment-item .comment-text {
+  color: #555;
+}
+
+
+
+/* ==============================
+   이벤트 게시판 스타일
+   ============================== */
+
+/* 이벤트 게시판 영역 스타일 */
+.event1-board {
+  padding: 20px; /* 게시판 여백 */
+  background-color: #f9f9f9; /* 게시판 배경색 */
+  border-radius: 8px; /* 게시판 테두리 둥글게 */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* 게시판 그림자 효과 */
+  margin-top: 20px; /* 위쪽 여백 */
+}
+
+/* 이벤트 항목 스타일 */
+.event-item {
+  background-color: #fff; /* 항목 배경색 */
+  border-radius: 8px; /* 항목 테두리 둥글게 */
+  padding: 20px; /* 항목 내부 여백 */
+  margin-bottom: 20px; /* 항목 간 간격 */
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  transition: box-shadow 0.3s ease; /* 그림자 전환 효과 */
+}
+
+/* 이벤트 항목에 마우스를 올렸을 때 그림자 강조 */
+.event-item:hover {
+  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.2); /* 마우스를 올렸을 때 그림자 강조 */
+}
+
+/* 이벤트 제목 스타일 */
+.event-title {
+  font-size: 1.5rem; /* 제목 폰트 크기 */
+  font-weight: bold; /* 제목 두껍게 */
+  margin-bottom: 10px; /* 제목과 날짜 간 간격 */
+}
+
+/* 이벤트 날짜 스타일 */
+.event-date {
+  font-size: 1rem; /* 날짜 폰트 크기 */
+  color: #888; /* 날짜 색상 */
+  margin-bottom: 10px; /* 날짜와 내용 간 간격 */
+}
+
+/* 이벤트 장소 스타일 */
+.event-location {
+  font-size: 1rem; /* 장소 폰트 크기 */
+  color: #333; /* 장소 색상 */
+  margin-bottom: 15px; /* 장소와 내용 간 간격 */
+}
+
+/* 이벤트 내용 스타일 */
+.event-content {
+  font-size: 1rem; /* 내용 폰트 크기 */
+  color: #333; /* 내용 텍스트 색상 */
+}
+/* 프로필 이미지를 그리드 형식으로 배치 */
+.post-header {
+  display: grid; /* 그리드 레이아웃 */
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* 자동으로 120px 크기의 칸을 만들어 이미지 배치 */
+  gap: 15px; /* 이미지 간의 간격 */
+  justify-items: center; /* 이미지 중앙 정렬 */
+  padding: 10px;
+}
+
+/* 프로필 이미지 스타일 */
+.profile-pic {
+  width: 100%; /* 이미지가 그리드 셀을 꽉 채우도록 */
+  height: auto; /* 비율 유지 */
+  border-radius: 8px; /* 둥근 모서리 */
+  object-fit: cover; /* 이미지 크기가 셀을 꽉 채우도록 */
+  transition: transform 0.3s ease; /* 마우스를 올렸을 때 확대 효과 */
+}
+
+/* 이미지에 마우스를 올렸을 때 효과 */
+.profile-pic:hover {
+  transform: scale(1.1); /* 이미지를 살짝 확대 */
+}
+/* 각 이미지에 카드 스타일 추가 */
+.profile-pic-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px; /* 둥근 모서리 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 마우스를 올렸을 때 카드 확대 및 그림자 강조 */
+.profile-pic-wrapper:hover {
+  transform: scale(1.05); /* 살짝 확대 */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
+}
+
+
+
+/* ==============================
+   Notice 탭 스타일
+   ============================== */
+
+/* Notice 탭 항목 스타일 */
+.notice-board {
+  padding: 20px; /* 게시판 여백 */
+  background-color: #f9f9f9; /* 게시판 배경색 */
+  border-radius: 8px; /* 게시판 테두리 둥글게 */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* 게시판 그림자 효과 */
+  margin-top: 20px; /* 위쪽 여백 */
+}
+
+/* 공지사항 항목 스타일 */
+.notice-item {
+  background-color: #fff; /* 항목 배경색 */
+  border-radius: 8px; /* 항목 테두리 둥글게 */
+  padding: 20px; /* 항목 내부 여백 */
+  margin-bottom: 20px; /* 항목 간 간격 */
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  transition: box-shadow 0.3s ease; /* 그림자 전환 효과 */
+}
+
+/* 공지사항 항목에 마우스를 올렸을 때 그림자 강조 */
+.notice-item:hover {
+  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.2); /* 마우스를 올렸을 때 그림자 강조 */
+}
+
+/* 공지사항 제목 스타일 */
+.notice-title {
+  font-size: 1.5rem; /* 제목 폰트 크기 */
+  font-weight: bold; /* 제목 두껍게 */
+  margin-bottom: 10px; /* 제목과 날짜 간 간격 */
+}
+
+/* 공지사항 날짜 스타일 */
+.notice-date {
+  font-size: 1rem; /* 날짜 폰트 크기 */
+  color: #888; /* 날짜 색상 */
+  margin-bottom: 15px; /* 날짜와 내용 간 간격 */
+}
+
+/* 공지사항 내용 스타일 */
+.notice-content {
+  font-size: 1rem; /* 내용 폰트 크기 */
+  color: #333; /* 내용 텍스트 색상 */
+}

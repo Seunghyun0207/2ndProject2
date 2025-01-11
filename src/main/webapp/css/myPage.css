@@ -1,0 +1,114 @@
+/* 전체 페이지 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    background-image: url('./images/1.png');  /* 배경 이미지 */
+    background-size: cover;  /* 배경 이미지가 화면을 꽉 채우도록 */
+    background-position: center;  /* 배경 이미지가 중앙에 위치하도록 */
+    background-attachment: fixed;  /* 스크롤 시 배경이 고정되도록 */
+}
+
+@media (max-width: 768px) {
+    /* 모바일에서 배경 이미지가 고정되지 않도록 설정 */
+    body {
+        background-attachment: scroll;
+    }
+}
+
+/* 마이페이지 컨테이너 */
+.mypage-container {
+    width: 80%;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 */
+h2 {
+    text-align: center;
+    font-size: 2em;
+    color: #333;
+}
+
+/* 개인정보 입력 폼 */
+.user-info {
+    margin-bottom: 20px;
+}
+
+.user-info label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.user-info input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 1em;
+}
+
+/* 버튼 스타일 */
+.buttons {
+    text-align: center;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #19c43e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.buttons button:hover {
+    background-color: #40db10;
+    transform: scale(1.05); /* 마우스 오버 시 버튼 크기 살짝 커지게 */
+}
+
+.buttons button:active {
+    transform: scale(0.95); /* 버튼 클릭 시 버튼 크기가 약간 작아짐 */
+}
+
+/* 고객센터 섹션 */
+.customer-service {
+    margin-top: 30px;
+}
+
+.customer-service h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;  /* 제목을 가운데 정렬 */
+}
+
+.customer-service button {
+    width: 24%;
+    padding: 12px 20px;
+    margin: 10px auto;
+    background-color: #19c43e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.customer-service button:hover {
+    background-color: #40db10;
+}
+
+.customer-service button:active {
+    transform: scale(0.95); /* 클릭 시 버튼 축소 효과 */
+}
