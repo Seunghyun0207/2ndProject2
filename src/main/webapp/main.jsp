@@ -1,9 +1,9 @@
 <%@page import="com.smhrd.model.UserVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page session="true" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
- <%
+	pageEncoding="UTF-8"%>
+<%@ page session="true"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%
     UserVO user = (UserVO) session.getAttribute("user");
     if (user == null) {
         // 로그인되지 않은 경우 로그인 페이지로 이동
@@ -14,24 +14,27 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>유동회관</title>
-    <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/main.css"> <!-- 이 순서 중요! 위치변동x -->
-    <style>
-        h1 {
-            font-family: 'East Sea Dokdo', cursive;
-            color : white;
-            font-size: 60px;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        }
-    </style>
-    
-    
-    <!-- 모임 찾기 AJAX -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+<meta charset="UTF-8">
+<title>유동회관</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" href="css/main.css">
+<!-- 이 순서 중요! 위치변동x -->
+<style>
+h1 {
+	font-family: 'East Sea Dokdo', cursive;
+	color: white;
+	font-size: 60px;
+	text-align: center;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+</style>
+
+
+<!-- 모임 찾기 AJAX -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
         // 모임 찾기 버튼 클릭 시 AJAX 호출
         function findParty() {
         	$.ajax({
@@ -73,50 +76,59 @@
         	});
         }
 
-        function loadMyParties() {
-            console.log("'나의 모임' 탭 클릭됨");
-            $.ajax({
-                url: '<%= request.getContextPath() %>/myParties',
-                method: 'GET',
-                success: function(response) {
-                    console.log("응답 데이터:", response);
-
-                    let myPartyHtml = '';
-                    response.forEach(function(party) {
-                        console.log("렌더링할 모임 데이터:", party);
-                        myPartyHtml += `
-                            <div>
-                                <p>모임 이름: ${party.partyNm || party.party_nm}</p>
-                                <p>지역: ${party.partyRegion || party.party_region}</p>
-                                <p>작성자: ${party.userId || party.user_id}</p>
-                                <p>생성일: ${party.createdAt || party.created_at}</p>
-                            </div>
-                        `;
-                    });
-
-                    console.log("생성된 HTML:", myPartyHtml);
-                    $('#myPartyList').html(myPartyHtml); // HTML 삽입
-                    console.log("HTML이 삽입된 후 DOM 상태:", $('#myPartyList').html());
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX 요청 오류:", error);
-                }
-            });
-        }
+     // 나의 모임 버튼 클릭 시 AJAX 호출
+		function loadMyParties() {
+		    console.log("'나의 모임' 탭 클릭됨");
+		    $.ajax({
+		        url: '<%= request.getContextPath() %>/myParties',  // 나의 모임 서블릿
+		        method: 'GET',
+		        success: function(response) {
+		            // 응답이 이미 JSON 객체라면 JSON.parse() 필요 없음
+		            var myParties = response;  // 응답이 배열 형태일 경우
+		
+		            console.log("응답 데이터:", myParties);  // 응답 데이터 확인
+		
+		            var myPartyHtml = '';
+		
+		            // 응답 데이터가 없으면 빈 배열을 반환한 경우
+		            if (myParties.length === 0) {
+		                myPartyHtml = '<p>참여한 모임이 없습니다.</p>';
+		            } else {
+		                for (var i = 0; i < myParties.length; i++) {
+		                    var party = myParties[i];
+		                    myPartyHtml += '<div class="party-item">';
+		                    // 나의 모임은 partyRoomProcess 서블릿으로 이동
+		                    myPartyHtml += '<p><strong>모임 이름: </strong><a href="<%= request.getContextPath() %>/partyRoomProcess?partyIdx=' + party.partyIdx + '" class="party-link">' + (party.partyNm || party.party_nm) + '</a></p>';
+		                    myPartyHtml += '<p><strong>지역: </strong>' + (party.partyRegion || party.party_region) + '</p>';
+		                    myPartyHtml += '<p><strong>작성자: </strong>' + (party.userId || party.user_id) + '</p>';
+		                    myPartyHtml += '<p><strong>생성일: </strong>' + (party.createdAt || party.created_at) + '</p>';
+		                    myPartyHtml += '</div>';
+		                }
+		            }
+		
+		            // #myPartyList 영역에 동적 HTML 삽입
+		            $('#myPartyList').html(myPartyHtml);
+		        },
+		        error: function(xhr, status, error) {
+		            console.log("AJAX 오류:", error);  // 오류 메시지 확인
+		            alert('나의 모임 조회 실패');
+		        }
+		    });
+		}
     </script>
 
-    <!-- "나의 모임" 탭 콘텐츠 -->
-	<div id="Meeting" class="tabcontent">
-    <!-- 검색 바 -->
-    <div class="search-bar">
-        <input type="text" id="my-party-search" placeholder="모임 제목을 검색하세요..." />
-        <button id="my-party-search-btn">검색</button>
-    </div>
+<!-- "나의 모임" 탭 콘텐츠 -->
+<div id="Meeting" class="tabcontent">
+	<!-- 검색 바 -->
+	<div class="search-bar">
+		<input type="text" id="my-party-search" placeholder="모임 제목을 검색하세요..." />
+		<button id="my-party-search-btn">검색</button>
+	</div>
 
-    <!-- 나의 모임 리스트 출력 영역 -->
-    <div id="myPartyList">
-        <!-- AJAX로 데이터가 로드되면 여기에 표시됩니다 -->
-    </div>
+	<!-- 나의 모임 리스트 출력 영역 -->
+	<div id="myPartyList">
+		<!-- AJAX로 데이터가 로드되면 여기에 표시됩니다 -->
+	</div>
 </div>
 
 <script>
@@ -128,162 +140,178 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
-    
+
 </head>
 <body>
-    <div id="app" class="wrapper" v-cloak v-bind:class="{'is-previous': isPreviousSlide, 'first-load': isFirstLoad}">
-        <h1 class="site-name">온도차이</h1>
+	<div id="app" class="wrapper" v-cloak
+		v-bind:class="{'is-previous': isPreviousSlide, 'first-load': isFirstLoad}">
+		<h1 class="site-name">온도차이</h1>
 
-    <!-- about -->
-    <div class="about">
-        <a class="bg_links social portfolio" href="https://www.rafaelalucas.com" target="_blank">
-            <span class="icon"></span>
-        </a>
-        <a class="bg_links social dribbble" href="https://dribbble.com/rafaelalucas" target="_blank">
-            <span class="icon"></span>
-        </a>
-        <a class="bg_links social linkedin" href="https://www.linkedin.com/in/rafaelalucas/" target="_blank">
-            <span class="icon"></span>
-        </a>
-        <a class="bg_links logo"></a>
-    </div>
+		<!-- about -->
+		<div class="about">
+			<a class="bg_links social portfolio"
+				href="https://www.rafaelalucas.com" target="_blank"> <span
+				class="icon"></span>
+			</a> <a class="bg_links social dribbble"
+				href="https://dribbble.com/rafaelalucas" target="_blank"> <span
+				class="icon"></span>
+			</a> <a class="bg_links social linkedin"
+				href="https://www.linkedin.com/in/rafaelalucas/" target="_blank">
+				<span class="icon"></span>
+			</a> <a class="bg_links logo"></a>
+		</div>
 
 
-    <section id="wrapper">
-        <div class="content">
-            <!-- Tab links -->
-            <div class="tabs">
-                    <button class="tablinks" data-country="FindMeeting" onclick="findParty()">
-				        <p data-title="FindMeeting">모임 찾기</p>
-				    </button>
-                <button class="tablinks active" data-country="Meeting" onclick="location.href='myParties'"><p data-title="Meeting">나의모임</p></button>
-                <button class="tablinks" data-country="Board"><p data-title="Board">피드</p></button>
-                <button class="tablinks" data-country="Event"><p data-title="Event">이벤트</p></button>
-                <button class="tablinks" data-country="Notice"><p data-title="Notice">공지사항</p></button>
-                
-            </div>
+		<section id="wrapper">
+			<div class="content">
+				<!-- Tab links -->
+				<div class="tabs">
+					<button class="tablinks" data-country="FindMeeting"
+						onclick="findParty()">
+						<p data-title="FindMeeting">모임 찾기</p>
+					</button>
+					<button class="tablinks active" data-country="Meeting"
+						onclick="location.href='myParties'">
+						<p data-title="Meeting">나의모임</p>
+					</button>
+					<button class="tablinks" data-country="Board">
+						<p data-title="Board">피드</p>
+					</button>
+					<button class="tablinks" data-country="Event">
+						<p data-title="Event">이벤트</p>
+					</button>
+					<button class="tablinks" data-country="Notice">
+						<p data-title="Notice">공지사항</p>
+					</button>
 
-			
-			<!-- 모임 찾기 -->
-            <div id="FindMeeting" class="tabcontent">
-                <div class="search-bar">
-                    <input type="text" id="search-input" placeholder="모임 제목을 검색하세요..." />
-                    <button id="search-btn">검색</button>
-                </div>
-             	
-             	<!-- 모임 생성 -->
-                <div class="create-meeting-btn-container">
-                	<form action="<%= request.getContextPath() %>/createPartyForm" method="get">
-                    	<button type="submit" class="btn btn-success" id="create-meeting-btn">모임 생성</button>
-                    </form>
-                </div>
-                
-                <!-- 모임 불러오기 -->
-	                <div class="meeting-item">
-	                	<div class="photo">
-	                        <img src="./images/1.png" alt="모임 사진 1">
-	                    </div>
-	                    <div id="partyList" class="details">
-	                    </div>
-	                </div>
-            </div>
-            
-            <!-- Tab content -->
-            <div id="Meeting" class="tabcontent active">
-                <!-- 검색 바 -->
-    <div class="search-bar">
-        <input type="text" id="search-input" placeholder="모임 제목을 검색하세요..." />
-        <button id="search-btn">검색</button>
-    </div>
+				</div>
 
-    <!-- 피드 모임 항목 -->
-    <div class="meeting-item">
-        <div class="photo">
-            <img src="./images/9.jpg" alt="모임 사진 1">
-        </div>
-        <div class="details">
-            <p>제목</p>
-        </div>
-    </div>
-                
-            </div>
-            
-            <div id="Board" class="tabcontent">
-                <div class="feed-header">
-                    <div class="user-info">
-                        <img src="user-photo.jpg" alt="User photo" class="user-photo">
-                        <span class="user-name">John Doe</span>
-                    </div>
-                    <span class="feed-date">2025-01-07</span>
-                </div>
-                <div class="feed-content">
-                    <p>This is a post content.</p>
-                    <img src="post-image.jpg" alt="Post image" class="feed-image">
-                </div>
-                <div class="feed-actions">
-                    <button class="like-button" onclick="toggleLike()">좋아요❤️</button>
-                    <button class="share-button" onclick="sharePost()">공유하기</button>
-                </div>
-                <div class="comments-section">
-                    <div class="comment-input-container">
-                        <input type="text" class="comment-input" placeholder="댓글을 남겨주세요..." id="commentInput">
-                        <button class="comment-submit" onclick="submitComment()">댓글 달기</button>
-                    </div>
-                    <div class="comments-list" id="commentsList">
-                        <!-- 댓글이 여기에 표시됩니다 -->
-                    </div>
-                </div>
-                <br><br><br>
-                <div class="feed-header">
-                    <div class="user-info">
-                        <img src="user-photo.jpg" alt="User photo" class="user-photo">
-                        <span class="user-name">John Doe</span>
-                    </div>
-                    <span class="feed-date">2025-01-07</span>
-                </div>
-                <div class="feed-content">
-                    <p>This is a post content.</p>
-                    <img src="post-image.jpg" alt="Post image" class="feed-image">
-                </div>
-                <div class="feed-actions">
-                    <button class="like-button">좋아요❤️</button>
-                    <button class="share-button">공유하기</button>
-                </div>
-                <div class="comments-section">
-                    <div class="comment-input-container">
-                        <input type="text" class="comment-input" placeholder="댓글을 남겨주세요..." id="commentInput">
-                        <button class="comment-submit" onclick="submitComment()">댓글 달기</button>
-                    </div>
-                    <div class="comments-list" id="commentsList">
-                        <!-- 댓글이 여기에 표시됩니다 -->
-                    </div>
-                </div>
-            </div>
-            
-            <div id="Event" class="tabcontent">
-                <div class="event-board">
-                    <div class="event-item">
-                        <h3 class="event-title">이벤트 제목</h3>
-                        <p class="event-date">2025-01-07</p>
-                        <p class="event-location">이벤트 장소: 스마트인재개발원</p>
-                        <p class="event-content">출석 열심히 하면 "하이오 커피" 쿠폰 제공.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="Notice" class="tabcontent">
-                <div class="notice-board">
-                    <div class="notice-item">
-                        <h3 class="notice-title">공지사항 제목</h3>
-                        <p class="notice-date">2025-01-07</p>
-                        <p class="notice-content">업데이트 중입니다.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
-<script>
+
+				<!-- 모임 찾기 -->
+				<div id="FindMeeting" class="tabcontent">
+					<div class="search-bar">
+						<input type="text" id="search-input" placeholder="모임 제목을 검색하세요..." />
+						<button id="search-btn">검색</button>
+					</div>
+
+					<!-- 모임 생성 -->
+					<div class="create-meeting-btn-container">
+						<form action="<%=request.getContextPath()%>/createPartyForm"
+							method="get">
+							<button type="submit" class="btn btn-success"
+								id="create-meeting-btn">모임 생성</button>
+						</form>
+					</div>
+
+					<!-- 모임 불러오기 -->
+					<div class="meeting-item">
+						<div class="photo">
+							<img src="./images/1.png" alt="모임 사진 1">
+						</div>
+						<div id="partyList" class="details"></div>
+					</div>
+				</div>
+
+				<!-- Tab content -->
+				<div id="Meeting" class="tabcontent active">
+					<!-- 검색 바 -->
+					<div class="search-bar">
+						<input type="text" id="search-input" placeholder="모임 제목을 검색하세요..." />
+						<button id="search-btn">검색</button>
+					</div>
+
+					<!-- 피드 모임 항목 -->
+					<div class="meeting-item">
+						<div class="photo">
+							<img src="./images/9.jpg" alt="모임 사진 1">
+						</div>
+						<div class="details">
+							<p>제목</p>
+						</div>
+					</div>
+
+				</div>
+
+				<div id="Board" class="tabcontent">
+					<div class="feed-header">
+						<div class="user-info">
+							<img src="user-photo.jpg" alt="User photo" class="user-photo">
+							<span class="user-name">John Doe</span>
+						</div>
+						<span class="feed-date">2025-01-07</span>
+					</div>
+					<div class="feed-content">
+						<p>This is a post content.</p>
+						<img src="post-image.jpg" alt="Post image" class="feed-image">
+					</div>
+					<div class="feed-actions">
+						<button class="like-button" onclick="toggleLike()">좋아요❤️</button>
+						<button class="share-button" onclick="sharePost()">공유하기</button>
+					</div>
+					<div class="comments-section">
+						<div class="comment-input-container">
+							<input type="text" class="comment-input"
+								placeholder="댓글을 남겨주세요..." id="commentInput">
+							<button class="comment-submit" onclick="submitComment()">댓글
+								달기</button>
+						</div>
+						<div class="comments-list" id="commentsList">
+							<!-- 댓글이 여기에 표시됩니다 -->
+						</div>
+					</div>
+					<br> <br> <br>
+					<div class="feed-header">
+						<div class="user-info">
+							<img src="user-photo.jpg" alt="User photo" class="user-photo">
+							<span class="user-name">John Doe</span>
+						</div>
+						<span class="feed-date">2025-01-07</span>
+					</div>
+					<div class="feed-content">
+						<p>This is a post content.</p>
+						<img src="post-image.jpg" alt="Post image" class="feed-image">
+					</div>
+					<div class="feed-actions">
+						<button class="like-button">좋아요❤️</button>
+						<button class="share-button">공유하기</button>
+					</div>
+					<div class="comments-section">
+						<div class="comment-input-container">
+							<input type="text" class="comment-input"
+								placeholder="댓글을 남겨주세요..." id="commentInput">
+							<button class="comment-submit" onclick="submitComment()">댓글
+								달기</button>
+						</div>
+						<div class="comments-list" id="commentsList">
+							<!-- 댓글이 여기에 표시됩니다 -->
+						</div>
+					</div>
+				</div>
+
+				<div id="Event" class="tabcontent">
+					<div class="event-board">
+						<div class="event-item">
+							<h3 class="event-title">이벤트 제목</h3>
+							<p class="event-date">2025-01-07</p>
+							<p class="event-location">이벤트 장소: 스마트인재개발원</p>
+							<p class="event-content">출석 열심히 하면 "하이오 커피" 쿠폰 제공.</p>
+						</div>
+					</div>
+				</div>
+
+				<div id="Notice" class="tabcontent">
+					<div class="notice-board">
+						<div class="notice-item">
+							<h3 class="notice-title">공지사항 제목</h3>
+							<p class="notice-date">2025-01-07</p>
+							<p class="notice-content">업데이트 중입니다.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	<script>
 // tabs
 
 var tabLinks = document.querySelectorAll(".tablinks");
@@ -414,6 +442,6 @@ document.getElementById('create-meeting-btn').addEventListener('click', function
     // window.location.href = '/create-meeting-page';
 });
 </script>
-<script src="main.js" defer></script>
+	<script src="main.js" defer></script>
 </body>
 </html>
