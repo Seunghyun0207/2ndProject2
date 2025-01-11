@@ -1165,4 +1165,15 @@ h1 {
 #create-meeting-btn:hover {
   background-color: #45a049;
 }
+#myPartyList p {
+    margin: 0;
+    padding: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
 
+#myPartyList div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}

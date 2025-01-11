@@ -18,35 +18,38 @@ import com.smhrd.model.UserVO;
 @WebServlet("/myParties")
 public class MyPartiesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	
-    	// 세션에서 로그인한 사용자 정보 가져오기
         HttpSession session = request.getSession();
         UserVO user = (UserVO) session.getAttribute("user");
 
-        // 로그인하지 않은 사용자 처리
+        // 세션에서 사용자 정보 확인
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 반환
+            response.getWriter().write("{\"error\":\"Unauthorized user\"}");
             return;
         }
 
         String userId = user.getUserId();
-
-        // PartyDAO에서 사용자가 가입한 승인된 모임 리스트 가져오기
         PartyDAO partyDAO = new PartyDAO();
-        List<PartyVO> myParties = partyDAO.selectMyParties(userId);
-        response.setContentType("application/json; charset=UTF-8");
-    	response.getWriter().write(new Gson().toJson(myParties));
-     // 데이터가 정상적으로 조회되었는지 로그 확인
-        System.out.println("Number of parties: " + (myParties != null ? myParties.size() : "null"));
 
-        // `myParties`가 null이거나 비어있으면 에러 메시지 설정
+        // 사용자 모임 데이터 가져오기
+        List<PartyVO> myParties = partyDAO.selectMyParties(userId);
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
+        // 데이터가 없을 경우 빈 배열 반환
         if (myParties == null || myParties.isEmpty()) {
-            request.setAttribute("errorMsg", "가입된 승인된 모임이 없습니다.");
-        } else {
-            request.setAttribute("myParties", myParties);
+            response.getWriter().write("[]");
+            System.out.println("No parties found for user: " + userId);
+            return;
         }
 
-        // `myParty.jsp`로 포워딩
-        request.getRequestDispatcher("main.jsp").forward(request, response);
+        // JSON 데이터로 변환 및 반환
+        String jsonResponse = new Gson().toJson(myParties);
+        response.getWriter().write(jsonResponse);
+
+        // 로그 출력
+        System.out.println("User ID: " + userId + ", Parties: " + myParties.size());
+        System.out.println("JSON Response: " + jsonResponse);
     }
 }

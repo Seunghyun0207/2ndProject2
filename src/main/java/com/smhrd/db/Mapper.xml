@@ -62,11 +62,10 @@
 	
     <!-- 내가 가입한 모임 가져오기 -->
 	<select id="selectMyParties" resultMap="PartyResultMap">
-	    SELECT DISTINCT p.party_idx, p.party_nm, p.party_info, p.party_region
-	    FROM tb_party p
-	    JOIN tb_joning j ON p.party_idx = j.party_idx
-	    WHERE j.user_id = #{userId} AND j.agree_yn = 'y';
-	</select>
+    SELECT party_idx, party_nm, party_region, user_id, created_at
+    FROM tb_party
+    WHERE user_id = #{userId}
+</select>
     
     <!-- 모임 상세정보 -->
     <select id="selectPartyByIdx" resultMap="PartyResultMap">
@@ -199,4 +198,6 @@
 	    FROM tb_joning
 	    WHERE party_idx = #{partyIdx}
 	</select>
+	
+	
 </mapper>
