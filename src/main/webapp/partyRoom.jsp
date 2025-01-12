@@ -4,10 +4,6 @@
 <%@page import="com.smhrd.model.PartyVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-    PartyVO party = (PartyVO) request.getAttribute("party");
-    List<PostVO> latestPosts = (List<PostVO>) request.getAttribute("latestPosts");
-%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -105,10 +101,10 @@
         <div class="content">
             <!-- Tab links -->
             <div class="tabs">
-                <button class="tablinks active"  data-country="Meeting1"><p>홈</p></button>
+                <button class="tablinks active" data-country="Meeting1"><p>홈</p></button>
                 <button class="tablinks" data-country="Board1"><p>피드</p></button>
                 <button class="tablinks" data-country="Event1"><p>갤러리</p></button>
-                <button class="tablinks" data-country="Notice1"s><p>모임 위치</p></button>
+                <button class="tablinks" data-country="Notice1"><p>모임 위치</p></button>
             </div>
 
             <!-- Tab content -->
@@ -121,75 +117,38 @@
 
                     <section class="meeting-introduction">
                         <h2>모임 소개</h2>
-                        <p>중장년들을 위한 지역 기반 SNS입니다.</p>
+                        <p>${party.partyInfo}</p>
                     </section>
 
                     <!-- 모임 공지사항 섹션 -->
                     <section class="meeting-notices">
                         <h2>모임 공지사항</h2>
-                        <ul>
-                            <li>다음 모임 날짜: 2025년 1월 7일 (화요일)</li>
-                            <li>모임 장소: 순천 스마트인재발원</li>
-                            <li>이번 달 주제 도서: 프로젝트 준비</li>
-                        </ul>
+							<p> ${party.partyNotice}</p>
                     </section>
 
                     <!-- 관리자 전용 버튼 섹션 -->
-					<%
-					    PartyVO partyVO = (PartyVO) request.getAttribute("party");
-					    if (party == null) {
-					%>
-					        <p>모임 정보를 가져올 수 없습니다.</p>
-					        <a href="main.jsp">메인 화면으로 돌아가기</a>
-					<%
-					        return; // JSP 실행 중단
-					    }
-					%>
-					
-					<!-- party 객체가 null이 아닌 경우 -->
-					<section class="admin-section" id="adminSection">
-					    <!-- 수정하기 버튼: partyIdx를 쿼리 파라미터로 전달 -->
-					    <a href="editParty.jsp?partyIdx=<%= party.getPartyIdx() %>">
-					        <button type="button" id="editButton">수정하기</button>
-					    </a>
-					
-					    <!-- 회원 정보 보기 버튼 -->
-					    <form action="viewMembers" method="get">
-					        <input type="hidden" name="partyIdx" value="<%= party.getPartyIdx() %>">
-					        <button type="submit">회원 정보 보기</button>
-					    </form>
-					</section>
+                    <% 
+                        PartyVO party = (PartyVO) request.getAttribute("party");
+                        UserVO user = (UserVO) session.getAttribute("user");
+                    %>
+
+                    <!-- 방장이면 수정하기 버튼과 회원 정보 보기 버튼을 보여준다 -->
+                    <% if (party != null && user != null && user.getUserId().equals(party.getUserId())) { %>
+                        <section class="admin-section" id="adminSection">
+                            <!-- 수정하기 버튼: partyIdx를 쿼리 파라미터로 전달 -->
+                            <a href="editParty.jsp?partyIdx=<%= party.getPartyIdx() %>">
+                                <button type="button" id="editButton">수정하기</button>
+                            </a>
+
+                            <!-- 회원 정보 보기 버튼 -->
+                            <form action="viewMembers" method="get">
+                                <input type="hidden" name="partyIdx" value="<%= party.getPartyIdx() %>">
+                                <button type="submit">회원 정보 보기</button>
+                            </form>
+                        </section>
+                    <% } %>
+
                 </div>
-                <%
-				    List<UserVO> members = (List<UserVO>) request.getAttribute("members");
-				    List<String> introList = (List<String>) request.getAttribute("introList");
-				%>
-
-				<% if (members != null && introList != null && !members.isEmpty()) { %>
-				    <!-- 가입 신청한 사람이 있는 경우 -->
-				    <table border="1" style="width: 50%; margin: auto; text-align: center;">
-				        <thead>
-				            <tr>
-				                <th>이름</th>
-				                <th>소개글</th>
-				            </tr>
-				        </thead>
-				        <tbody>
-				            <% for (int i = 0; i < members.size(); i++) { %>
-				                <tr>
-				                    <td><%= members.get(i).getUserName() %></td> <!-- 이름 출력 -->
-				                    <td><%= introList.get(i) %></td> <!-- 소개글 출력 -->
-				                </tr>
-				            <% } %>
-				        </tbody>
-				    </table>
-				<% } else { %>
-				    <!-- 가입 신청한 사람이 없는 경우 -->
-				    <div style="text-align: center; margin-top: 50px;">
-				        <p>가입 신청한 사람이 없습니다.</p>
-				    </div>
-				<% } %>
-
                 <div id="Board1" class="tabcontent">
                   <div class="feed-item" id="post1">
                     <div class="feed-header">

@@ -112,33 +112,27 @@ public class PartyDAO {
 
 	// 모임방 정보 수정
 	public int updateParty(PartyVO party) {
-		String sql = "UPDATE tb_party SET party_nm = ?, party_info = ?, party_region = ?, party_file = ?, party_notice = ? WHERE party_idx = ?";
-		try (Connection conn = SqlSessionManager.getSqlSession().openSession().getConnection();
-				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	    String sql = "UPDATE tb_party SET party_nm = ?, party_info = ?, party_region = ?, party_file = ?, party_notice = ? WHERE party_idx = ?";
+	    try (Connection conn = SqlSessionManager.getSqlSession().openSession().getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-			// 디버깅 출력
-			System.out.println("Updating party with ID: " + party.getPartyIdx());
-			System.out.println("New Name: " + party.getPartyNm());
-			System.out.println("New Info: " + party.getPartyInfo());
-			System.out.println("New Region: " + party.getPartyRegion());
-			System.out.println("New File: " + party.getPartyFile());
-			System.out.println("New Notice: " + party.getPartyNotice());
+	        // 디버깅 출력
+	        System.out.println("Updating party with partyNotice: " + party.getPartyNotice()); // partyNotice 출력
 
-			// 파라미터 설정
-			pstmt.setString(1, party.getPartyNm());
-			pstmt.setString(2, party.getPartyInfo());
-			pstmt.setString(3, party.getPartyRegion());
-			pstmt.setString(4, party.getPartyFile());
-			pstmt.setString(5, party.getPartyNotice());
-			pstmt.setInt(6, party.getPartyIdx());
+	        pstmt.setString(1, party.getPartyNm());
+	        pstmt.setString(2, party.getPartyInfo());
+	        pstmt.setString(3, party.getPartyRegion());
+	        pstmt.setString(4, party.getPartyFile());
+	        pstmt.setString(5, party.getPartyNotice());  // partyNotice 값 설정
+	        pstmt.setInt(6, party.getPartyIdx());
 
-			int result = pstmt.executeUpdate();
-			conn.commit(); // 반드시 커밋 호출
-			return result;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return 0;
+	        int result = pstmt.executeUpdate();
+	        conn.commit(); // 반드시 커밋 호출
+	        return result;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return 0;
 	}
 
 	// 모임방 삭제

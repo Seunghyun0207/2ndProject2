@@ -34,6 +34,7 @@ public class EditPartyServlet extends HttpServlet {
             String partyTitle = request.getParameter("partyTitle");
             String partyDescription = request.getParameter("partyDescription");
             String partyRegion = request.getParameter("partyRegion");
+            String partyNotice = request.getParameter("partyNotice");
 
             // 이미지 파일 처리
             Part partyImagePart = request.getPart("partyImage");
@@ -51,7 +52,7 @@ public class EditPartyServlet extends HttpServlet {
             int result = partyDAO.updateParty(party);  // 업데이트 처리
 
             if (result > 0) {
-                response.sendRedirect("partyRoom.jsp?partyIdx=" + partyIdx);  // 성공 시 해당 방으로 리디렉션
+                response.sendRedirect("main.jsp");  // 성공 시 해당 방으로 리디렉션
             } else {
                 request.setAttribute("errorMsg", "수정에 실패했습니다.");
                 request.getRequestDispatcher("editParty.jsp").forward(request, response);

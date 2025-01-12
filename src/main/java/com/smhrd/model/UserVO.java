@@ -38,6 +38,10 @@ public class UserVO {
         this.userRegion = userRegion;
     }
 
+    public UserVO(String userId, String userName) {
+        this.userId = userId;
+        this.userName = userName;
+    }
 
     // Getter와 Setter
     public String getUserId() {

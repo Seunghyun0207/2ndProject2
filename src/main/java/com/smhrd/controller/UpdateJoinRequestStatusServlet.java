@@ -12,17 +12,26 @@ import com.smhrd.model.JoinRequestDAO;
 @WebServlet("/updateJoinRequestStatus")
 public class UpdateJoinRequestStatusServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int partyIdx = Integer.parseInt(request.getParameter("partyIdx"));
         String userId = request.getParameter("userId");
-        char agreeYn = request.getParameter("agreeYn").charAt(0); // 'Y' 또는 'N'
+        int partyIdx = Integer.parseInt(request.getParameter("partyIdx"));
+        String action = request.getParameter("action");  // 'accept' 또는 'reject'
 
         JoinRequestDAO dao = new JoinRequestDAO();
-        int result = dao.updateJoinRequestStatus(partyIdx, userId, agreeYn);
+        int result = 0;
+
+        if ("accept".equals(action)) {
+            // 수락 처리
+            result = dao.updateJoinRequestStatus(partyIdx, userId, 'Y');
+        } else if ("reject".equals(action)) {
+            // 거절 처리
+            result = dao.updateJoinRequestStatus(partyIdx, userId, 'N');
+        }
 
         if (result > 0) {
-            response.sendRedirect("partyRoom.jsp?partyIdx=" + partyIdx);
+            // 성공 시, 목록에서 해당 신청을 제거하고 새로고침
+            response.sendRedirect("viewMembers?partyIdx=" + partyIdx);
         } else {
-            response.getWriter().println("업데이트 실패");
+            response.getWriter().println("오류가 발생했습니다.");
         }
     }
 }
