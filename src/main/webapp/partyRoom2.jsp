@@ -145,124 +145,58 @@
             </div>
         </section>
     </div>
-    
-    
+
     <script>
-       // Tabs script
-       var tabLinks = document.querySelectorAll(".tablinks");
-       var tabContent = document.querySelectorAll(".tabcontent");
-   
-       tabLinks.forEach(function(el) {
-           el.addEventListener("click", openTabs);
-       });
-   
-       function openTabs(el) {
-           var btnTarget = el.currentTarget;
-           var country = btnTarget.dataset.country;
-   
-           tabContent.forEach(function(el) {
-               el.classList.remove("active");
-           });
-   
-           tabLinks.forEach(function(el) {
-               el.classList.remove("active");
-           });
-   
-           document.querySelector("#" + country).classList.add("active");
-           btnTarget.classList.add("active");
-   
-           // "모임 위치" 탭 클릭 시 지도 로드
-           if (country === "Notice1") {
-               loadMapContent();
-           }
-       }
-   
-       function loadMapContent() {
-           const mapContent = document.getElementById("mapContent");
-   
-           if (mapContent.innerHTML.trim() === "") {
-               console.log("Fetching kakaomap...");
-               mapContent.innerHTML = `
-                   <div id="map" style="width:100%; height:400px;"></div>
-                   <div id="location-info" style="padding: 10px; background-color: #f0f0f0; margin-top: 10px;">
-                       <p>위도: <span id="latitude">0</span></p>
-                       <p>경도: <span id="longitude">0</span></p>
-                   </div>
-               `;
-               initMap(37.5665, 126.9780); // 서울시청 좌표 예시
-           }
-       }
-   
-       // 지도 초기화 함수
-       // 전역 변수로 마커 선언
-      let currentMarker = null;
-   // 📸 게시물 추가 기능
-      document.getElementById('addPost').addEventListener('click', function () {
-          const fileInput = document.getElementById('imageUpload');
-          const textInput = document.getElementById('postText');
-          const postList = document.querySelector('.post-list');
+        // Tabs script
+        var tabLinks = document.querySelectorAll(".tablinks");
+        var tabContent = document.querySelectorAll(".tabcontent");
 
-          if (fileInput.files.length > 0) {
-              const file = fileInput.files[0];
-              const reader = new FileReader();
+        tabLinks.forEach(function(el) {
+            el.addEventListener("click", openTabs);
+        });
 
-              reader.onload = function (e) {
-                  const imageUrl = e.target.result;
-                  const textContent = textInput.value || '사용자 게시물입니다.';
+        function openTabs(el) {
+            var btnTarget = el.currentTarget;
+            var country = btnTarget.dataset.country;
 
-                  // 게시물 생성
-                  const newPost = document.createElement('li');
-                  newPost.innerHTML = `
-                      <div class="post">
-                          <img src="${imageUrl}" alt="사용자 이미지" class="post-image">
-                          <p class="post-text">${textContent}</p>
-                      </div>
-                  `;
-                  postList.appendChild(newPost);
+            tabContent.forEach(function(el) {
+                el.classList.remove("active");
+            });
 
-                  // 입력 필드 초기화
-                  fileInput.value = '';
-                  textInput.value = '';
-              };
+            tabLinks.forEach(function(el) {
+                el.classList.remove("active");
+            });
 
-              reader.readAsDataURL(file);
-          } else {
-              alert('이미지를 선택해주세요!');
-          }
-      });
-      function initMap(lat, lng) {
-          var mapContainer = document.getElementById('map'); // 지도 div
-          var mapOption = {
-              center: new kakao.maps.LatLng(lat, lng), // 중심 좌표
-              level: 3 // 지도 확대 레벨
-          };
-          var map = new kakao.maps.Map(mapContainer, mapOption);
-      
-          // 클릭 시 마커 추가하고 위도, 경도 표시
-          kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
-              var latLng = mouseEvent.latLng; // 클릭한 위치의 위도, 경도
-              var lat = latLng.getLat();
-              var lng = latLng.getLng();
-      
-              // 기존 마커가 있으면 삭제
-              if (currentMarker) {
-                  currentMarker.setMap(null); // 마커 삭제
-              }
-      
-              // 새로운 마커 추가
-              currentMarker = new kakao.maps.Marker({
-                  position: latLng
-              });
-              currentMarker.setMap(map);
-      
-              // 위도, 경도 표시
-              document.getElementById("latitude").textContent = lat;
-              document.getElementById("longitude").textContent = lng;
-          });
-      }
+            document.querySelector("#" + country).classList.add("active");
+            btnTarget.classList.add("active");
 
-   </script>
-    
+            // "모임 위치" 탭 클릭 시 지도 로드
+            if (country === "Notice1") {
+                loadMapContent();
+            }
+        }
 
+        function loadMapContent() {
+            const mapContent = document.getElementById("mapContent");
+
+            if (mapContent.innerHTML.trim() === "") {
+                console.log("Fetching kakaomap...");
+                mapContent.innerHTML = `
+                    <div id="map" style="width:100%; height:400px;"></div>
+                `;
+                initMap(37.5665, 126.9780); // 서울시청 좌표 예시
+            }
+        }
+
+        // 지도 초기화 함수
+        function initMap(lat, lng) {
+            var mapContainer = document.getElementById('map'); // 지도 div
+            var mapOption = {
+                center: new kakao.maps.LatLng(lat, lng), // 중심 좌표
+                level: 3 // 지도 확대 레벨
+            };
+            var map = new kakao.maps.Map(mapContainer, mapOption);
+        }
+    </script>
 </body>
 </html>

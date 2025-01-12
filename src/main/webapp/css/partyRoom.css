@@ -1,5 +1,28 @@
 
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i|IBM+Plex+Sans+Condensed:400,400i|IBM+Plex+Sans:100,100i,400,400i,700,700i|IBM+Plex+Serif:400,400i");
+#Notice1 {
+    display: block; /* 또는 active 클래스에 따라 설정 */
+    width: 100%;
+    height: 400px; /* 부모 요소의 높이 명시 */
+}
+
+#Notice1.active {
+    display: block; /* 탭 전환 시 활성화 */
+}
+
+#mapContent {
+    display: block;
+    width: 100%;
+    height: 400px; /* 부모 요소의 높이 명시 */
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: block; /* 반드시 표시되도록 설정 */
+}
+
 .about {
   position: fixed; /* 위치 고정: 화면 오른쪽 아래에 고정 */
   z-index: 10;
@@ -1094,3 +1117,4 @@ h1 {
   font-size: 1rem; /* 내용 폰트 크기 */
   color: #333; /* 내용 텍스트 색상 */
 }
+
