@@ -62,10 +62,10 @@
 	
     <!-- 내가 가입한 모임 가져오기 -->
 	<select id="selectMyParties" resultMap="PartyResultMap">
-    SELECT party_idx, party_nm, party_region, user_id, created_at
-    FROM tb_party
-    WHERE user_id = #{userId}
-</select>
+	    SELECT party_idx, party_nm, party_region, user_id, created_at
+	    FROM tb_party
+	    WHERE user_id = #{userId}
+	</select>
     
     <!-- 모임 상세정보 -->
     <select id="selectPartyByIdx" resultMap="PartyResultMap">
@@ -186,7 +186,12 @@
 	</update>
 	
 	<!-- 회원 목록을 가져오기 -->
-	<select id="selectMembersByPartyIdx" resultType="com.smhrd.model.UserVO">
+	<resultMap id="UserResultMap" type="com.smhrd.model.UserVO">
+	    <result property="userId" column="user_id" />
+	    <result property="userName" column="user_name" />
+	</resultMap>
+
+	<select id="selectMembersByPartyIdx" resultMap="UserResultMap">
 	    SELECT u.user_id, u.user_name
 	    FROM tb_user u
 	    JOIN tb_joning j ON u.user_id = j.user_id
@@ -197,8 +202,26 @@
 	<select id="selectJoinIntroByPartyIdx" resultType="String">
 	    SELECT join_intro
 	    FROM tb_joning
-	    WHERE party_idx = #{partyIdx}
+	    WHERE party_idx = #{partyIdx};
 	</select>
 	
+	<!-- 특정 모임의 가입 신청 목록 가져오기 -->
+	<select id="selectPendingJoinRequests" resultType="com.smhrd.model.JoinRequestVO">
+	    SELECT join_idx, user_id, join_intro, agree_yn
+	    FROM tb_joning
+	    WHERE party_idx = #{partyIdx} AND agree_yn = 'n';
+	</select>
 	
+	<!-- 가입 신청 수락 -->
+	<update id="updateAgreeStatus">
+	    UPDATE tb_joning
+	    SET agree_yn = 'y'
+	    WHERE join_idx = #{joinIdx};
+	</update>
+	
+	<!-- 가입 신청 거절 -->
+	<delete id="deleteJoinRequest">
+	    DELETE FROM tb_joning
+	    WHERE join_idx = #{joinIdx};
+	</delete>
 </mapper>

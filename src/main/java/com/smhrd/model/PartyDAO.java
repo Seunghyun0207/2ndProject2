@@ -66,6 +66,7 @@ public class PartyDAO {
 		SqlSession session = sqlSessionFactory.openSession(true); // Auto-commit
 		int cnt = 0;
 		try {
+			System.out.println("Inserting party: " + party.getPartyNm() + ", Info: " + party.getPartyInfo());  // 디버그 로그 추가
 			// 모임 삽입
 			cnt = session.insert("com.smhrd.db.Mapper.insertParty", party);
 			// 생성된 partyIdx 값 확인
