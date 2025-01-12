@@ -4,12 +4,12 @@
 <%@ page session="true"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%
-    UserVO user = (UserVO) session.getAttribute("user");
-    if (user == null) {
-        // 로그인되지 않은 경우 로그인 페이지로 이동
-        response.sendRedirect("login.jsp");
-        return;
-    }
+UserVO user = (UserVO) session.getAttribute("user");
+if (user == null) {
+	// 로그인되지 않은 경우 로그인 페이지로 이동
+	response.sendRedirect("login.jsp");
+	return;
+}
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -29,6 +29,22 @@ h1 {
 	text-align: center;
 	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
+
+/* 공통 스타일 */
+.party-item {
+	border: 1px solid #ccc;
+	padding: 10px;
+	margin: 10px;
+	cursor: pointer;
+	transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* 마우스를 올렸을 때 스타일 */
+.party-item:hover {
+	background-color: #f0f0f0;
+	transform: scale(1.02); /* 약간 확대 */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+}
 </style>
 
 
@@ -36,85 +52,100 @@ h1 {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
         // 모임 찾기 버튼 클릭 시 AJAX 호출
-        function findParty() {
-        	$.ajax({
-        	    url: '<%= request.getContextPath() %>/findPartyProcess',
-        	    method: 'GET',
-        	    success: function(response) {
-        	        // 응답이 이미 JSON 객체라면 JSON.parse() 필요 없음
-        	        // var partyList = JSON.parse(response);  <-- 이 라인을 제거함
-        	        var partyList = response;  // 만약 응답이 이미 배열 형태라면 이렇게 처리
+    function findParty() {
+        $.ajax({
+            url: '<%=request.getContextPath()%>/findPartyProcess',
+            method: 'GET',
+            success: function(response) {
+                var partyList = response;
 
-        	        console.log("응답 데이터:", partyList);  // 응답 데이터 확인
+                console.log("응답 데이터:", partyList);
 
-        	        var partyHtml = '';
+                var partyHtml = '';
 
-        	        if (partyList.length === 0) {
-        	            partyHtml = '<p>등록된 모임이 없습니다.</p>';
-        	        } else {
-        	            for (var i = 0; i < partyList.length; i++) {
-        	                var party = partyList[i];
-        	                partyHtml += '<div>';
-        	                partyHtml += '<p>모임 이름: ' + party.partyNm + '</p>';
-        	                partyHtml += '<p>지역: ' + party.partyRegion + '</p>';
-        	                partyHtml += '<p>작성자: ' + party.userId + '</p>';
-        	                partyHtml += '<p>생성일: ' + party.createdAt + '</p>';
-        	                partyHtml += '<form action="<%= request.getContextPath() %>/partyDetailProcess" method="get">';
-        	                partyHtml += '<input type="hidden" name="partyIdx" value="' + party.partyIdx + '">';
-        	                partyHtml += '<button type="submit" class="btn btn-primary">가입하기</button>';
-        	                partyHtml += '</form>';
-        	                partyHtml += '</div>';
-        	            }
-        	        }
+                if (partyList.length === 0) {
+                    partyHtml = '<p>등록된 모임이 없습니다.</p>';
+                } else {
+                    for (var i = 0; i < partyList.length; i++) {
+                        var party = partyList[i];
+                        // party-item 전체를 클릭 가능하도록 설정
+                        partyHtml += '<div class="party-item" onclick="redirectToJoinParty(\'' + party.partyIdx + '\')">';
+                        partyHtml += '<p><strong>모임 이름: </strong>' + party.partyNm + '</p>';
+                        partyHtml += '<p><strong>지역: </strong>' + party.partyRegion + '</p>';
+                        partyHtml += '<p><strong>작성자: </strong>' + party.userId + '</p>';
+                        partyHtml += '<p><strong>생성일: </strong>' + party.createdAt + '</p>';
+                        partyHtml += '</div>';
+                    }
+                }
 
-        	        $('#partyList').html(partyHtml);  // #partyList 영역에 동적 HTML 삽입
-        	    },
-        	    error: function(xhr, status, error) {
-        	        console.log("AJAX 오류:", error);  // 오류 메시지 확인
-        	        alert('모임 찾기 실패');
-        	    }
-        	});
+                $('#partyList').html(partyHtml);
+            },
+            error: function(xhr, status, error) {
+                console.log("AJAX 오류:", error);
+                alert('모임 찾기 실패');
+            }
+        });
+    }
+
+    // 가입 페이지로 이동하는 함수
+    function redirectToJoinParty(partyIdx) {
+        window.location.href = '<%=request.getContextPath()%>/partyDetailProcess?partyIdx=' + partyIdx;
+    }
+
+    // 나의 모임 버튼 클릭 시 데이터 로드
+    function loadMyParties() {
+        $.ajax({
+            url: '<%=request.getContextPath()%>/myParties',
+            method: 'GET',
+            success: function(response) {
+                var myParties = response;
+
+                var myPartyHtml = '';
+
+                if (myParties.length === 0) {
+                    myPartyHtml = '<p>참여한 모임이 없습니다.</p>';
+                } else {
+                    for (var i = 0; i < myParties.length; i++) {
+                        var party = myParties[i];
+                        myPartyHtml += '<div class="party-item" onclick="redirectToPartyRoom(\'' + party.partyIdx + '\')">';
+                        myPartyHtml += '<p><strong>모임 이름: </strong>' + party.partyNm + '</p>';
+                        myPartyHtml += '<p><strong>지역: </strong>' + party.partyRegion + '</p>';
+                        myPartyHtml += '<p><strong>작성자: </strong>' + party.userId + '</p>';
+                        myPartyHtml += '<p><strong>생성일: </strong>' + party.createdAt + '</p>';
+                        myPartyHtml += '</div>';
+                    }
+                }
+
+                $('#myPartyList').html(myPartyHtml);
+            },
+            error: function(xhr, status, error) {
+                console.log("AJAX 오류:", error);
+                alert('나의 모임 조회 실패');
+            }
+        });
+    }
+
+    // partyRoom으로 리다이렉트하는 함수 추가
+    function redirectToPartyRoom(partyIdx) {
+        window.location.href = '<%=request.getContextPath()%>/partyRoomProcess?partyIdx=' + partyIdx;
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 모임 찾기 버튼 클릭 이벤트
+        document.querySelector("[data-country='FindMeeting']").addEventListener('click', findParty);
+
+        // 나의 모임 버튼 클릭 이벤트
+        document.querySelector("[data-country='Meeting']").addEventListener('click', loadMyParties);
+    });
+    
+    // partyIdx를 제대로 전달하도록 JavaScript를 수정
+    function redirectToPartyRoom(partyIdx) {
+        if (partyIdx) {
+            window.location.href = '<%= request.getContextPath() %>/partyRoomProcess?partyIdx=' + partyIdx;
+        } else {
+            alert('잘못된 모임 ID입니다.');
         }
-
-     // 나의 모임 버튼 클릭 시 AJAX 호출
-		function loadMyParties() {
-		    console.log("'나의 모임' 탭 클릭됨");
-		    $.ajax({
-		        url: '<%= request.getContextPath() %>/myParties',  // 나의 모임 서블릿
-		        method: 'GET',
-		        success: function(response) {
-		            // 응답이 이미 JSON 객체라면 JSON.parse() 필요 없음
-		            var myParties = response;  // 응답이 배열 형태일 경우
-		
-		            console.log("응답 데이터:", myParties);  // 응답 데이터 확인
-		
-		            var myPartyHtml = '';
-		
-		            // 응답 데이터가 없으면 빈 배열을 반환한 경우
-		            if (myParties.length === 0) {
-		                myPartyHtml = '<p>참여한 모임이 없습니다.</p>';
-		            } else {
-		                for (var i = 0; i < myParties.length; i++) {
-		                    var party = myParties[i];
-		                    myPartyHtml += '<div class="party-item">';
-		                    // 나의 모임은 partyRoomProcess 서블릿으로 이동
-		                    myPartyHtml += '<p><strong>모임 이름: </strong><a href="<%= request.getContextPath() %>/partyRoomProcess?partyIdx=' + party.partyIdx + '" class="party-link">' + (party.partyNm || party.party_nm) + '</a></p>';
-		                    myPartyHtml += '<p><strong>지역: </strong>' + (party.partyRegion || party.party_region) + '</p>';
-		                    myPartyHtml += '<p><strong>작성자: </strong>' + (party.userId || party.user_id) + '</p>';
-		                    myPartyHtml += '<p><strong>생성일: </strong>' + (party.createdAt || party.created_at) + '</p>';
-		                    myPartyHtml += '</div>';
-		                }
-		            }
-		
-		            // #myPartyList 영역에 동적 HTML 삽입
-		            $('#myPartyList').html(myPartyHtml);
-		        },
-		        error: function(xhr, status, error) {
-		            console.log("AJAX 오류:", error);  // 오류 메시지 확인
-		            alert('나의 모임 조회 실패');
-		        }
-		    });
-		}
+    }
     </script>
 
 <!-- "나의 모임" 탭 콘텐츠 -->
@@ -131,15 +162,7 @@ h1 {
 	</div>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector("[data-country='Meeting']").addEventListener('click', function() {
-        console.log("'나의 모임' 탭 클릭됨");
-        document.querySelector("[data-country='Meeting']").removeEventListener('click', loadMyParties);
-        loadMyParties();
-    });
-});
-</script>
+
 
 </head>
 <body>
@@ -170,8 +193,7 @@ document.addEventListener("DOMContentLoaded", function() {
 						onclick="findParty()">
 						<p data-title="FindMeeting">모임 찾기</p>
 					</button>
-					<button class="tablinks active" data-country="Meeting"
-						onclick="location.href='myParties'">
+					<button class="tablinks active" data-country="Meeting">
 						<p data-title="Meeting">나의모임</p>
 					</button>
 					<button class="tablinks" data-country="Board">

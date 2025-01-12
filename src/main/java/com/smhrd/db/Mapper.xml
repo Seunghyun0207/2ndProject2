@@ -82,11 +82,12 @@
 	</insert>
     
     <!-- 특정 모임 방 정보 가져오기 -->
-    <select id="selectPartyById" resultType="com.smhrd.model.PartyVO">
-        SELECT party_idx, party_nm, party_info, party_region, party_file, user_id, created_at
-        FROM tb_party
-        WHERE party_idx = #{partyIdx};
-    </select>
+	<select id="selectPartyById" resultMap="PartyResultMap">
+	    SELECT party_idx, party_nm, CAST(party_info AS CHAR) AS party_info, party_region, 
+	           party_file, user_id, created_at
+	    FROM tb_party
+	    WHERE party_idx = #{partyIdx};
+	</select>
 
     <!-- 모임 방 가입된 회원 수 가져오기 -->
     <select id="getMemberCount" resultType="int">
