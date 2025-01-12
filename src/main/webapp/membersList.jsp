@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> <!-- fn 태그 라이브러리 추가 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -9,82 +10,44 @@
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/meetingAccept.css"> <!-- CSS 경로 설정 -->
 </head>
 <body>
-    <div class="acceptance-container">
-        <h1>모임방 요청 수락</h1>
+    <h2>회원 목록</h2>
 
-        <!-- 요청 리스트 -->
-        <div id="request-list" class="request-list">
-            <!-- 요청 카드가 동적으로 생성됩니다. -->
-        </div>
-    </div>
+    <!-- 오류 메시지가 있을 경우 alert을 통해 사용자에게 알림 -->
+    <c:if test="${not empty errorMessage}">
+        <script type="text/javascript">
+            alert("${errorMessage}");
+        </script>
+    </c:if>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const requestList = document.getElementById('request-list');
-            const partyIdx = <%= request.getAttribute("partyIdx") %>;  // partyIdx 값
+    <!-- 회원 목록 테이블 -->
+    <table>
+        <thead>
+            <tr>
+                <th>회원 ID</th>
+                <th>가입 소개</th>
+                <th>동의 여부</th>
+                <th>가입일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 반복문을 통해 각 회원의 데이터를 출력 -->
+            <c:forEach var="request" items="${joinRequests}">
+                <tr>
+                    <!-- userId 출력 -->
+                    <td>${request.userId}</td>
+                    
+                    <!-- joinIntro 출력, 비어 있으면 "내용 없음" 출력 -->
+                    <td>${empty request.joinIntro ? '내용 없음' : request.joinIntro}</td>
+                    
+                    <!-- agreeYn 출력 -->
+                    <td>${request.agreeYn}</td>
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
 
-            // 서버에서 데이터를 비동기적으로 받아오기
-            fetch(`getJoinRequests?partyIdx=${partyIdx}`)
-                .then(response => response.json())
-                .then(requests => {
-                    // 요청 카드 생성 함수
-                    function createRequestCard(request) {
-                        const card = document.createElement('div');
-                        card.className = 'request-card';
-
-                        card.innerHTML = `
-                            <p><strong>아이디:</strong> ${request.userId}</p>
-                            <p><strong>이름:</strong> ${request.name}</p>
-                            <p><strong>활동 지역:</strong> ${request.region}</p>
-                            <p><strong>자기소개글:</strong> ${request.introduction}</p>
-                            <p><strong>나이:</strong> ${request.age}</p>
-                            <p><strong>작성 시간:</strong> ${request.timestamp}</p>
-                            <div class="button-group">
-                                <button class="accept-btn" data-action="accept">수락하기</button>
-                                <button class="reject-btn" data-action="reject">거절하기</button>
-                            </div>
-                        `;
-
-                        // 버튼 이벤트 추가
-                        card.querySelector('.accept-btn').addEventListener('click', function() {
-                            handleRequestAction(request.userId, 'accept', card);
-                        });
-
-                        card.querySelector('.reject-btn').addEventListener('click', function() {
-                            handleRequestAction(request.userId, 'reject', card);
-                        });
-
-                        return card;
-                    }
-
-                    // 요청 카드 리스트 렌더링
-                    requests.forEach(request => {
-                        const card = createRequestCard(request);
-                        requestList.appendChild(card);
-                    });
-                })
-                .catch(error => console.error('Error fetching requests:', error));
-
-            // 요청 수락/거절 처리 함수
-            function handleRequestAction(userId, action, card) {
-                fetch('updateJoinRequestStatus', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId, action })
-                })
-                .then(response => {
-                    if (response.ok) {
-                    	alert("요청을 " + (action === 'accept' ? '수락' : '거절') + "했습니다.");
-                        card.remove();
-                    } else {
-                        alert('요청 처리 중 오류가 발생했습니다.');
-                    }
-                })
-                .catch(error => console.error('Error processing request:', error));
-            }
-        });
-    </script>
-
+    <br>
+    <a href="index.jsp">홈으로 돌아가기</a>
 
     <style>
         body {

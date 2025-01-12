@@ -11,18 +11,6 @@ import com.smhrd.db.SqlSessionManager;
 public class JoinRequestDAO {
     private SqlSessionFactory sqlSessionFactory = SqlSessionManager.getSqlSession();
 
-    // 신청 정보 저장
-    public int insertJoinRequest(JoinRequestVO joinRequest) {
-        SqlSession session = sqlSessionFactory.openSession(true); // Auto-commit
-        int result = 0;
-        try {
-            result = session.insert("com.smhrd.db.Mapper.insertJoinRequest", joinRequest);
-        } finally {
-            session.close();
-        }
-        return result;
-    }
-
     // 특정 방 신청자 정보 조회
     public List<JoinRequestVO> selectJoinRequestsByPartyIdx(int partyIdx) {
         SqlSession session = sqlSessionFactory.openSession();
@@ -35,20 +23,29 @@ public class JoinRequestDAO {
         return joinRequests;
     }
     
-    // 가입 상태 업데이트 메서드
-    public int updateJoinRequestStatus(int partyIdx, String userId, char agreeYn) {
-        SqlSession session = sqlSessionFactory.openSession(true); // Auto-commit
-        int result = 0;
-        try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("partyIdx", partyIdx);
-            params.put("userId", userId);
-            params.put("agreeYn", agreeYn);
-
-            result = session.update("com.smhrd.db.Mapper.updateJoinRequestStatus", params);
-        } finally {
-            session.close();
-        }
+    // 모임 가입 요청 저장
+    public int insertJoinRequest(JoinRequestVO joinRequest) {
+    	SqlSession session = sqlSessionFactory.openSession(true);
+        int result = session.insert("com.smhrd.db.Mapper.insertJoinRequest", joinRequest);
+        session.close();
         return result;
     }
+    
+    // 가입 요청 상태 업데이트
+    public int updateJoinRequestStatus(String userId, int partyIdx, char agreeYn) {
+    	SqlSession session = sqlSessionFactory.openSession(true);
+        JoinRequestVO joinRequest = new JoinRequestVO(userId, partyIdx, null, agreeYn);
+        int result = session.update("com.smhrd.db.Mapper.updateJoinRequestStatus", joinRequest);
+        session.close();
+        return result;
+    }
+    
+    // 모임 가입 요청 조회
+    public List<JoinRequestVO> getJoinRequestsByPartyIdx(int partyIdx) {
+    	SqlSession session = sqlSessionFactory.openSession(true);
+        List<JoinRequestVO> joinRequests = session.selectList("com.smhrd.db.Mapper.selectJoinRequestsByPartyIdx", partyIdx);
+        session.close();
+        return joinRequests;
+    }
+    
 }

@@ -1,16 +1,26 @@
 package com.smhrd.model;
 
+import java.sql.Timestamp;
+
 public class JoinRequestVO {
     private String userId;
     private int partyIdx;
     private String joinIntro;
     private char agreeYn;
+    private Timestamp joinedAt;
 
     public JoinRequestVO(String userId, int partyIdx, String joinIntro, char agreeYn) {
         this.userId = userId;
         this.partyIdx = partyIdx;
         this.joinIntro = joinIntro;
         this.agreeYn = agreeYn;
+    }
+    
+    public JoinRequestVO(String userId, String joinIntro, char agreeYn, Timestamp joinedAt) {
+        this.userId = userId;
+        this.joinIntro = joinIntro;
+        this.agreeYn = agreeYn;
+        this.joinedAt = joinedAt;
     }
 
     // Getter와 Setter 추가

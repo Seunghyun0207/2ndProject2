@@ -243,4 +243,15 @@ public class PartyDAO {
 		}
 		return introList;
 	}
+	
+	public List<JoinRequestVO> getJoinRequestsByPartyIdx(int partyIdx) {
+	    SqlSession session = sqlSessionFactory.openSession();
+	    List<JoinRequestVO> joinRequests = null;
+	    try {
+	        joinRequests = session.selectList("com.smhrd.db.Mapper.selectJoinRequestsByPartyIdx", partyIdx);
+	    } finally {
+	        session.close();
+	    }
+	    return joinRequests;
+	}
 }

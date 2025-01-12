@@ -172,11 +172,19 @@
         VALUES (#{partyIdx}, #{userId}, #{joinIntro}, #{agreeYn});
     </insert>
 
+	<!-- join_intro 값을 정확히 매핑하는 ResultMap -->
+	<resultMap id="JoinRequestResultMap" type="com.smhrd.model.JoinRequestVO">
+	    <result property="userId" column="user_id"/>
+	    <result property="partyIdx" column="party_idx"/>
+	    <result property="joinIntro" column="join_intro"/>
+	    <result property="agreeYn" column="agree_yn"/>
+	</resultMap>
+    
     <!-- 특정 방의 신청자 정보 조회 -->
     <select id="selectJoinRequestsByPartyIdx" resultType="com.smhrd.model.JoinRequestVO">
         SELECT user_id, join_intro, agree_yn
         FROM tb_joning
-        WHERE party_idx = #{partyIdx};
+        WHERE party_idx = #{partyIdx}
     </select>
     
     <!-- 신청 가입 수락 및 변경 -->
