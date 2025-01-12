@@ -1,5 +1,13 @@
+<%@page import="com.smhrd.model.UserVO"%>
+<%@page import="com.smhrd.model.PostVO"%>
+<%@page import="java.util.List"%>
+<%@page import="com.smhrd.model.PartyVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+    PartyVO party = (PartyVO) request.getAttribute("party");
+    List<PostVO> latestPosts = (List<PostVO>) request.getAttribute("latestPosts");
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -46,6 +54,33 @@
           background-color: #0056b3;
         }
     </style>
+    
+        <script>
+        // 회원 정보 보기로 이동 (동적으로 렌더링)
+        function viewMembers(partyIdx) {
+            if (partyIdx) {
+                // 서버에 요청을 보냄 (AJAX를 사용)
+                fetch('viewMembers?partyIdx=' + partyIdx)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('네트워크 응답에 문제가 있습니다.');
+                        }
+                        return response.text(); // 응답 데이터를 문자열로 받음
+                    })
+                    .then(html => {
+                        // membersList 부분 업데이트
+                        document.getElementById('membersList').innerHTML = html;
+                        document.getElementById('membersSection').style.display = 'block';
+                    })
+                    .catch(error => {
+                        alert('회원 정보를 불러오는 중 문제가 발생했습니다.');
+                        console.error('Error:', error);
+                    });
+            } else {
+                alert('잘못된 모임 ID입니다.');
+            }
+        }
+    </script>
 </head>
 <body>
     <div id="app" class="wrapper" v-cloak v-bind:class="{'is-previous': isPreviousSlide, 'first-load': isFirstLoad}">
@@ -100,14 +135,60 @@
                     </section>
 
                     <!-- 관리자 전용 버튼 섹션 -->
-				    <section class="admin-section" id="adminSection">
-				        <button id="editButton">수정하기</button>
-				        <form action="viewMembers" method="get" style="display:inline;">
-				            <input type="hidden" name="partyIdx" value="${partyIdx}">
-				            <button id="membersButton" type="submit">회원들 정보</button>
-				        </form>
-				    </section>
+					<%
+					    PartyVO partyVO = (PartyVO) request.getAttribute("party");
+					    if (party == null) {
+					%>
+					        <p>모임 정보를 가져올 수 없습니다.</p>
+					        <a href="main.jsp">메인 화면으로 돌아가기</a>
+					<%
+					        return; // JSP 실행 중단
+					    }
+					%>
+					
+					<!-- party 객체가 null이 아닌 경우 -->
+					<section class="admin-section" id="adminSection">
+					    <!-- 수정하기 버튼: partyIdx를 쿼리 파라미터로 전달 -->
+					    <a href="editParty.jsp?partyIdx=<%= party.getPartyIdx() %>">
+					        <button type="button" id="editButton">수정하기</button>
+					    </a>
+					
+					    <!-- 회원 정보 보기 버튼 -->
+					    <form action="viewMembers" method="get">
+					        <input type="hidden" name="partyIdx" value="<%= party.getPartyIdx() %>">
+					        <button type="submit">회원 정보 보기</button>
+					    </form>
+					</section>
                 </div>
+                <%
+				    List<UserVO> members = (List<UserVO>) request.getAttribute("members");
+				    List<String> introList = (List<String>) request.getAttribute("introList");
+				%>
+
+				<% if (members != null && introList != null && !members.isEmpty()) { %>
+				    <!-- 가입 신청한 사람이 있는 경우 -->
+				    <table border="1" style="width: 50%; margin: auto; text-align: center;">
+				        <thead>
+				            <tr>
+				                <th>이름</th>
+				                <th>소개글</th>
+				            </tr>
+				        </thead>
+				        <tbody>
+				            <% for (int i = 0; i < members.size(); i++) { %>
+				                <tr>
+				                    <td><%= members.get(i).getUserName() %></td> <!-- 이름 출력 -->
+				                    <td><%= introList.get(i) %></td> <!-- 소개글 출력 -->
+				                </tr>
+				            <% } %>
+				        </tbody>
+				    </table>
+				<% } else { %>
+				    <!-- 가입 신청한 사람이 없는 경우 -->
+				    <div style="text-align: center; margin-top: 50px;">
+				        <p>가입 신청한 사람이 없습니다.</p>
+				    </div>
+				<% } %>
 
                 <div id="Board1" class="tabcontent">
                   <div class="feed-item" id="post1">
