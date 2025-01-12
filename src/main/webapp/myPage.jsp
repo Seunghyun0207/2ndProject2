@@ -108,14 +108,13 @@ function saveChanges() {
 }
 
 // 삭제하기 버튼 클릭 시 회원 삭제
-function deleteAccount() {
-    if (confirm("정말로 회원 정보를 삭제하시겠습니까?")) {
-        // 회원 정보 삭제 (예시)
-        user = null;
-
-        // 페이지 새로 고침 혹은 리디렉션
-        alert("회원 정보가 삭제되었습니다.");
-        window.location.href = '/';  // 메인 페이지로 리디렉션
+function confirmDelete(buttonElement) {
+    // "삭제하기" 버튼 클릭 시, 사용자 확인
+    let confirmation = confirm("정말로 이 모임을 삭제하시겠습니까?");
+    if (confirmation) {
+        let partyIdx = buttonElement.getAttribute("data-partyidx");
+        // 서버로 삭제 요청 전송
+        window.location.href = "deletePartyProcess?partyIdx=" + partyIdx;  // 삭제 후 리디렉션
     }
 }
 </script>

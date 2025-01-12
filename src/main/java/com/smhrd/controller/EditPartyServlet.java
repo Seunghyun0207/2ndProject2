@@ -20,15 +20,17 @@ import com.smhrd.model.PartyVO;
 public class EditPartyServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            // UTF-8로 인코딩 처리
+            request.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
+
+            // 파라미터 받기
             String partyIdxStr = request.getParameter("partyIdx");
-            
-            // partyIdx가 null 이거나 비어있으면 예외 처리
             if (partyIdxStr == null || partyIdxStr.isEmpty()) {
                 throw new IllegalArgumentException("partyIdx 파라미터가 누락되었습니다.");
             }
-            
-            int partyIdx = Integer.parseInt(partyIdxStr); // partyIdx를 정수로 변환
 
+            int partyIdx = Integer.parseInt(partyIdxStr);
             String partyTitle = request.getParameter("partyTitle");
             String partyDescription = request.getParameter("partyDescription");
             String partyRegion = request.getParameter("partyRegion");
@@ -38,7 +40,7 @@ public class EditPartyServlet extends HttpServlet {
             String fileName = null;
             if (partyImagePart != null && partyImagePart.getSize() > 0) {
                 fileName = Paths.get(partyImagePart.getSubmittedFileName()).getFileName().toString();
-                partyImagePart.write("C:/upload/" + fileName);  // 파일 저장
+                partyImagePart.write("C:/upload/" + fileName);
             }
 
             // PartyVO 객체 생성
@@ -46,22 +48,15 @@ public class EditPartyServlet extends HttpServlet {
 
             // DB 업데이트
             PartyDAO partyDAO = new PartyDAO();
-            int result = partyDAO.updateParty(party);  // DB에서 업데이트 처리
+            int result = partyDAO.updateParty(party);  // 업데이트 처리
 
             if (result > 0) {
-                // 성공 시 해당 방으로 리디렉션
-                response.sendRedirect("partyRoom.jsp?partyIdx=" + partyIdx);
+                response.sendRedirect("partyRoom.jsp?partyIdx=" + partyIdx);  // 성공 시 해당 방으로 리디렉션
             } else {
-                // 실패 시 에러 메시지 설정하고 다시 editParty.jsp로 포워드
                 request.setAttribute("errorMsg", "수정에 실패했습니다.");
-                request.getRequestDispatcher("editParty.jsp?partyIdx=" + partyIdx).forward(request, response);
+                request.getRequestDispatcher("editParty.jsp").forward(request, response);
             }
-        } catch (IllegalArgumentException e) {
-            // 파라미터 오류 시 처리
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            // 기타 예외 처리
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "수정 처리 중 오류가 발생했습니다.");
         }

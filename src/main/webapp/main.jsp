@@ -193,10 +193,10 @@ h1 {
 						onclick="findParty()">
 						<p data-title="FindMeeting">모임 찾기</p>
 					</button>
-					<button class="tablinks active" data-country="Meeting">
+					<button class="tablinks" data-country="Meeting">
 						<p data-title="Meeting">나의모임</p>
 					</button>
-					<button class="tablinks" data-country="Board">
+					<button class="tablinks active" data-country="Board">
 						<p data-title="Board">피드</p>
 					</button>
 					<button class="tablinks" data-country="Event">

@@ -1,10 +1,14 @@
 package com.smhrd.model;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -66,7 +70,8 @@ public class PartyDAO {
 		SqlSession session = sqlSessionFactory.openSession(true); // Auto-commit
 		int cnt = 0;
 		try {
-			System.out.println("Inserting party: " + party.getPartyNm() + ", Info: " + party.getPartyInfo());  // 디버그 로그 추가
+			System.out.println("Inserting party: " + party.getPartyNm() + ", Info: " + party.getPartyInfo()); // 디버그 로그
+																												// 추가
 			// 모임 삽입
 			cnt = session.insert("com.smhrd.db.Mapper.insertParty", party);
 			// 생성된 partyIdx 값 확인
@@ -107,17 +112,29 @@ public class PartyDAO {
 
 	// 모임방 정보 수정
 	public int updateParty(PartyVO party) {
-		String sql = "UPDATE tb_party SET party_nm = ?, party_info = ?, party_region = ?, party_file = ? WHERE party_idx = ?";
+		String sql = "UPDATE tb_party SET party_nm = ?, party_info = ?, party_region = ?, party_file = ?, party_notice = ? WHERE party_idx = ?";
 		try (Connection conn = SqlSessionManager.getSqlSession().openSession().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
+			// 디버깅 출력
+			System.out.println("Updating party with ID: " + party.getPartyIdx());
+			System.out.println("New Name: " + party.getPartyNm());
+			System.out.println("New Info: " + party.getPartyInfo());
+			System.out.println("New Region: " + party.getPartyRegion());
+			System.out.println("New File: " + party.getPartyFile());
+			System.out.println("New Notice: " + party.getPartyNotice());
+
+			// 파라미터 설정
 			pstmt.setString(1, party.getPartyNm());
 			pstmt.setString(2, party.getPartyInfo());
 			pstmt.setString(3, party.getPartyRegion());
 			pstmt.setString(4, party.getPartyFile());
-			pstmt.setInt(5, party.getPartyIdx());
+			pstmt.setString(5, party.getPartyNotice());
+			pstmt.setInt(6, party.getPartyIdx());
 
-			return pstmt.executeUpdate();
+			int result = pstmt.executeUpdate();
+			conn.commit(); // 반드시 커밋 호출
+			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -125,19 +142,43 @@ public class PartyDAO {
 	}
 
 	// 모임방 삭제
-	public int deleteParty(int partyIdx) throws SQLException {
-		String sql = "DELETE FROM tb_party WHERE party_idx = ?";
-		try (Connection conn = SqlSessionManager.getSqlSession().openSession().getConnection();
-				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	public int deleteParty(int partyIdx, String userId) {
+	    SqlSession session = null;
+	    try {
+	        // 세션 열기 (openSession()을 사용)
+	        session = SqlSessionManager.getSqlSession().openSession();  // 세션을 openSession()으로 열어줍니다.
 
-			pstmt.setInt(1, partyIdx);
-			return pstmt.executeUpdate();
-		} catch (SQLException e) {
-			System.err.println("모임 삭제 중 오류 발생: " + e.getMessage());
-			throw e; // 예외를 호출한 서블릿으로 전달
-		}
+	        // 파라미터 맵 생성
+	        Map<String, Object> params = new HashMap<>();
+	        params.put("partyIdx", partyIdx);
+	        params.put("userId", userId);
+
+	        // 디버깅: 파라미터 값 확인
+	        System.out.println("Deleting party with ID: " + partyIdx + " and user ID: " + userId);
+
+	        // MyBatis 쿼리 실행
+	        int result = session.delete("com.smhrd.db.Mapper.deleteParty", params);
+
+	        // 삭제 후 커밋
+	        session.commit();
+
+	        // 로그로 결과 출력
+	        System.out.println("Number of deleted records: " + result);
+
+	        return result;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (session != null) {
+	            session.rollback();  // 오류가 나면 롤백
+	        }
+	    } finally {
+	        if (session != null) {
+	            session.close();  // 세션 종료하여 자원 반납
+	        }
+	    }
+	    return 0;  // 삭제되지 않으면 0 반환
 	}
-
+	
 	public boolean updateParty(int partyIdx, String partyTitle, String partyDescription, String partyRegion,
 			String fileName, String partyNotice) {
 

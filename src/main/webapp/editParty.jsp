@@ -75,13 +75,17 @@
     }
 
     function confirmDelete(buttonElement) {
+        // 버튼에서 partyIdx 값 추출
+        let partyIdx = buttonElement.getAttribute("data-partyidx");
+
         // "삭제하기" 버튼 클릭 시, 사용자 확인
         let confirmation = confirm("정말로 이 모임을 삭제하시겠습니까?");
         if (confirmation) {
-            let partyIdx = buttonElement.getAttribute("data-partyidx");
-            window.location.href = "deletePartyProcess?partyIdx=" + partyIdx; // 삭제 후 리디렉션
+            // 삭제 후 리디렉션
+            window.location.href = "deletePartyProcess?partyIdx=" + partyIdx;
         }
     }
+
 
     function submitForm() {
         // "수정완료" 버튼 클릭 시 폼 제출

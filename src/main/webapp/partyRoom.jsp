@@ -105,10 +105,10 @@
         <div class="content">
             <!-- Tab links -->
             <div class="tabs">
-                <button class="tablinks active" data-country="Meeting1"><p data-title="Meeting1">홈</p></button>
-                <button class="tablinks" data-country="Board1"><p data-title="Board1">피드</p></button>
-                <button class="tablinks" data-country="Event1"><p data-title="Event1">갤러리</p></button>
-                <button class="tablinks" data-country="Notice1"><p data-title="Notice1">모임 위치</p></button>
+                <button class="tablinks active"  data-country="Meeting1"><p>홈</p></button>
+                <button class="tablinks" data-country="Board1"><p>피드</p></button>
+                <button class="tablinks" data-country="Event1"><p>갤러리</p></button>
+                <button class="tablinks" data-country="Notice1"s><p>모임 위치</p></button>
             </div>
 
             <!-- Tab content -->
@@ -235,7 +235,72 @@
             </div>
         </div>
     </section>
+    
+    
+	 <script>
+	        // tabs
+	        var tabLinks = document.querySelectorAll(".tablinks");
+	        var tabContent = document.querySelectorAll(".tabcontent");
+	
+	        tabLinks.forEach(function(el) {
+	            el.addEventListener("click", openTabs);
+	        });
+	
+	        function openTabs(el) {
+	            var btnTarget = el.currentTarget;
+	            var country = btnTarget.dataset.country;
+	
+	            tabContent.forEach(function(el) {
+	                el.classList.remove("active");
+	            });
+	
+	            tabLinks.forEach(function(el) {
+	                el.classList.remove("active");
+	            });
+	
+	            document.querySelector("#" + country).classList.add("active");
+	            
+	            btnTarget.classList.add("active");
+	        }
+	
+	        // 📸 게시물 추가 기능
+	        document.getElementById('addPost').addEventListener('click', function () {
+	            const fileInput = document.getElementById('imageUpload');
+	            const textInput = document.getElementById('postText');
+	            const postList = document.querySelector('.post-list');
+	
+	            if (fileInput.files.length > 0) {
+	                const file = fileInput.files[0];
+	                const reader = new FileReader();
+	
+	                reader.onload = function (e) {
+	                    const imageUrl = e.target.result;
+	                    const textContent = textInput.value || '사용자 게시물입니다.';
+	
+	                    // 게시물 생성
+	                    const newPost = document.createElement('li');
+	                    newPost.innerHTML = `
+	                        <div class="post">
+	                            <img src="${imageUrl}" alt="사용자 이미지" class="post-image">
+	                            <p class="post-text">${textContent}</p>
+	                        </div>
+	                    `;
+	                    postList.appendChild(newPost);
+	
+	                    // 입력 필드 초기화
+	                    fileInput.value = '';
+	                    textInput.value = '';
+	                };
+	
+	                reader.readAsDataURL(file);
+	            } else {
+	                alert('이미지를 선택해주세요!');
+	            }
+	        });
+	
+	        // [중략] 이하의 JavaScript 코드 생략
+	    </script>
 
-    <script src="<%= request.getContextPath() %>/partyRoom.js"></script> <!-- JS 경로 설정 -->
+    
 </body>
 </html>

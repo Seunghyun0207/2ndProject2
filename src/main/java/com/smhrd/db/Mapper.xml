@@ -68,9 +68,9 @@
 	</select>
     
     <!-- 모임 상세정보 -->
-    <select id="selectPartyByIdx" resultMap="PartyResultMap">
+	<select id="selectPartyByIdx" resultMap="PartyResultMap">
 	    SELECT party_idx, party_nm, party_info, party_region, 
-	           party_file, user_id, created_at
+	           party_file, user_id, created_at, party_notice
 	    FROM tb_party
 	    WHERE party_idx = #{partyIdx};
 	</select>
@@ -97,20 +97,21 @@
     </select>
     
     <!-- 모임 방 수정 -->
-    <update id="updateParty">
-        UPDATE tb_party
-        SET party_nm = #{partyNm},
-            party_info = #{partyInfo},
-            party_region = #{partyRegion},
-            party_file = #{partyFile}
-        WHERE party_idx = #{partyIdx} AND user_id = #{userId};
-    </update>
+	<update id="updateParty">
+	    UPDATE tb_party
+	    SET party_nm = #{partyNm},
+	        party_info = #{partyInfo},
+	        party_region = #{partyRegion},
+	        party_file = #{partyFile},
+	        party_notice = #{partyNotice}
+	    WHERE party_idx = #{partyIdx}
+	</update>
 
     <!-- 모임 방 삭제 -->
-    <delete id="deleteParty">
-        DELETE FROM tb_party
-        WHERE party_idx = #{partyIdx} AND user_id = #{userId};
-    </delete>
+	<delete id="deleteParty" parameterType="map">
+	    DELETE FROM tb_party
+	    WHERE party_idx = #{partyIdx} AND user_id = #{userId}
+	</delete>
     
     
     
