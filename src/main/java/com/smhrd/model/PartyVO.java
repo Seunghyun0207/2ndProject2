@@ -7,8 +7,9 @@ public class PartyVO {
     private String partyRegion;
     private String partyFile;
     private int memberCount;
-    private String userId; // 방장 ID
+    private String userId;
     private String createdAt;
+    private String partyNotice;
 
     public PartyVO(int partyIdx, String partyNm, String partyInfo, String partyRegion, String partyFile, String createdAt, String userId) {
         this.partyIdx = partyIdx;
@@ -113,5 +114,13 @@ public class PartyVO {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+    
+    public String getPartyNotice() {
+        return partyNotice;
+    }
+    
+    public void setPartyNotice(String partyNotice) {
+        this.partyNotice = partyNotice;
     }
 }

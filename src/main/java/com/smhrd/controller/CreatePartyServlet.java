@@ -65,7 +65,7 @@ public class CreatePartyServlet extends HttpServlet {
                 // 방 생성 후, 자동으로 해당 모임에 가입 처리 (방장은 'y'로 가입)
                 dao.insertJoinRequest(userId, partyIdx, "방장으로 자동 가입됨", 'y');  // 자동 가입, 'y'로 설정
 
-                response.sendRedirect("partyRoom.jsp?partyIdx=" + partyIdx);
+                response.sendRedirect("main.jsp");
             } else {
                 response.sendRedirect("createParty.jsp?error=fail");
             }

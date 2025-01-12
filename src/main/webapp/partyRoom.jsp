@@ -1,3 +1,7 @@
+<%@page import="com.smhrd.model.UserVO"%>
+<%@page import="com.smhrd.model.PostVO"%>
+<%@page import="java.util.List"%>
+<%@page import="com.smhrd.model.PartyVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -14,8 +18,6 @@
             text-align: center;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
-    </style>
-    <style>
         .post {
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -47,69 +49,62 @@
             background-color: #0056b3;
         }
     </style>
-    <!-- 카카오 맵 API 추가 -->
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=58a4a5cfbc781b2348261bdd16809813&libraries=services"></script>
-
 </head>
 <body>
-    <div id="app" class="wrapper" v-cloak v-bind:class="{'is-previous': isPreviousSlide, 'first-load': isFirstLoad}">
+    <div id="app" class="wrapper">
         <h1 class="site-name">유동회관모임</h1>
-
-        <!-- about -->
         <div class="about">
-            <a class="bg_links social portfolio" href="<%= request.getContextPath() %>./myPage.jsp">
+            <a class="bg_links social portfolio" href="<%= request.getContextPath() %>/myPage.jsp">
                 <span class="icon"></span>
             </a>
-            <a class="bg_links social linkedin" href="<%= request.getContextPath() %>./login.jsp">
+            <a class="bg_links social linkedin" href="<%= request.getContextPath() %>/login.jsp">
                 <span class="icon"></span>
             </a>
             <a class="bg_links logo"></a>
         </div>
-        <!-- end about -->
 
         <section id="wrapper">
             <div class="content">
-                <!-- Tab links -->
                 <div class="tabs">
-                    <button class="tablinks active" data-country="Meeting1"><p>홈</p></button>
-                    <button class="tablinks" data-country="Board1"><p>피드</p></button>
-                    <button class="tablinks" data-country="Event1"><p>갤러리</p></button>
-                    <button class="tablinks" data-country="Notice1"><p>모임 위치</p></button>
+                    <button class="tablinks active" data-country="Meeting1">홈</button>
+                    <button class="tablinks" data-country="Board1">피드</button>
+                    <button class="tablinks" data-country="Event1">갤러리</button>
+                    <button class="tablinks" data-country="Notice1">모임 위치</button>
                 </div>
 
-                <!-- Tab content -->
                 <div class="wrapper_tabcontent">
                     <div id="Meeting1" class="tabcontent active">
-                        <!-- 모임 소개 섹션 -->
                         <section>
-                            <img src="<%= request.getContextPath() %>/images/7.jpg">
+                            <img src="<%= request.getContextPath() %>/images/7.jpg" alt="Meeting">
                         </section>
-
                         <section class="meeting-introduction">
                             <h2>모임 소개</h2>
-                            <p>중장년들을 위한 지역 기반 SNS입니다.</p>
+                            <p>${party.partyInfo}</p>
                         </section>
-
-                        <!-- 모임 공지사항 섹션 -->
                         <section class="meeting-notices">
                             <h2>모임 공지사항</h2>
-                            <ul>
-                                <li>다음 모임 날짜: <%= new java.util.Date() %></li>
-                                <li>모임 장소: 순천 스마트인재발원</li>
-                                <li>이번 달 주제 도서: 프로젝트 준비</li>
-                            </ul>
+                            <p>${party.partyNotice}</p>
                         </section>
-
-                        <!-- 관리자 전용 버튼 섹션 -->
+                        <% 
+                            PartyVO party = (PartyVO) request.getAttribute("party");
+                            UserVO user = (UserVO) session.getAttribute("user");
+                        %>
+                        <% if (party != null && user != null && user.getUserId().equals(party.getUserId())) { %>
                         <section class="admin-section" id="adminSection">
-                            <button id="editButton">수정하기</button>
-                            <button id="membersButton">회원들 정보</button>
+                            <a href="editParty.jsp?partyIdx=<%= party.getPartyIdx() %>">
+                                <button type="button" id="editButton">수정하기</button>
+                            </a>
+                            <form action="viewMembers" method="get">
+                                <input type="hidden" name="partyIdx" value="<%= party.getPartyIdx() %>">
+                                <button type="submit">회원 정보 보기</button>
+                            </form>
                         </section>
+                        <% } %>
                     </div>
 
                     <div id="Board1" class="tabcontent">
-                        <!-- 피드 게시물 표시 -->
-                        <div class="feed-item" id="post1">
+                        <div class="feed-item">
                             <div class="feed-header">
                                 <div class="user-info">
                                     <img src="<%= request.getContextPath() %>/images/11.jpg" alt="User photo" class="user-photo">
@@ -123,18 +118,24 @@
                                 <img src="<%= request.getContextPath() %>/images/10.jpg" alt="Post image" class="feed-image">
                             </div>
                             <div class="feed-actions">
-                                <button class="like-button" onclick="likePost(1)">좋아요❤️ 0</button>
-                                <button class="share-button" onclick="sharePost(1)">공유하기</button>
-                                <button class="edit-button" onclick="editPost(1)">수정하기</button>
+                                <button onclick="likePost(1)">좋아요❤️ 0</button>
+                                <button onclick="sharePost(1)">공유하기</button>
+                                <button onclick="editPost(1)">수정하기</button>
+                            </div>
+                            <div class="comments-section">
+                                <div class="comment-input-container">
+                                    <input type="text" class="comment-input" placeholder="댓글을 남겨주세요..." id="commentInput1">
+                                    <button class="comment-submit" onclick="submitComment(1)">댓글 달기</button>
+                                </div>
+                                <div class="comments-list" id="commentsList1">
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div id="Event1" class="tabcontent">
                         <div class="post-header">
-                            <div class="profile-pic-wrapper">
-                                <img class="profile-pic" src="<%= request.getContextPath() %>/images/7.jpg" alt="Profile" />
-                            </div>
+                            <img class="profile-pic" src="<%= request.getContextPath() %>/images/7.jpg" alt="Profile">
                         </div>
                     </div>
 
@@ -145,9 +146,8 @@
             </div>
         </section>
     </div>
-    
-    
-    <script>
+
+<script>
        // Tabs script
        var tabLinks = document.querySelectorAll(".tablinks");
        var tabContent = document.querySelectorAll(".tabcontent");
@@ -196,40 +196,7 @@
        // 지도 초기화 함수
        // 전역 변수로 마커 선언
       let currentMarker = null;
-   // 📸 게시물 추가 기능
-      document.getElementById('addPost').addEventListener('click', function () {
-          const fileInput = document.getElementById('imageUpload');
-          const textInput = document.getElementById('postText');
-          const postList = document.querySelector('.post-list');
-
-          if (fileInput.files.length > 0) {
-              const file = fileInput.files[0];
-              const reader = new FileReader();
-
-              reader.onload = function (e) {
-                  const imageUrl = e.target.result;
-                  const textContent = textInput.value || '사용자 게시물입니다.';
-
-                  // 게시물 생성
-                  const newPost = document.createElement('li');
-                  newPost.innerHTML = `
-                      <div class="post">
-                          <img src="${imageUrl}" alt="사용자 이미지" class="post-image">
-                          <p class="post-text">${textContent}</p>
-                      </div>
-                  `;
-                  postList.appendChild(newPost);
-
-                  // 입력 필드 초기화
-                  fileInput.value = '';
-                  textInput.value = '';
-              };
-
-              reader.readAsDataURL(file);
-          } else {
-              alert('이미지를 선택해주세요!');
-          }
-      });
+      
       function initMap(lat, lng) {
           var mapContainer = document.getElementById('map'); // 지도 div
           var mapOption = {
@@ -263,6 +230,3 @@
 
    </script>
     
-
-</body>
-</html>
