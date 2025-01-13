@@ -21,8 +21,20 @@ public class RegisterServlet extends HttpServlet {
         String userAge = request.getParameter("userAge"); // yyyy-MM-dd 형식
         String userRegion = request.getParameter("userRegion");
 
+        // 검증: userAge가 유효한지 확인
+        if (userAge == null || userAge.isEmpty()) {
+            response.sendRedirect("register.jsp?error=invalidAge");
+            return;
+        }
+
         // userAge를 Date로 변환
-        Date userAgeDate = Date.valueOf(userAge);
+        Date userAgeDate = null;
+        try {
+            userAgeDate = Date.valueOf(userAge); // yyyy-MM-dd 형식으로 변환
+        } catch (IllegalArgumentException e) {
+            response.sendRedirect("register.jsp?error=invalidAgeFormat");
+            return;
+        }
 
         // UserVO 객체 생성
         UserVO user = new UserVO(userId, userPw, userName, userGender, userAgeDate, userRegion);

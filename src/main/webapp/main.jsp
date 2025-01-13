@@ -52,78 +52,81 @@ h1 {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
         // 모임 찾기 버튼 클릭 시 AJAX 호출
-    function findParty() {
-        $.ajax({
-            url: '<%=request.getContextPath()%>/findPartyProcess',
-            method: 'GET',
-            success: function(response) {
-                var partyList = response;
+   function findParty() {
+    // 초기 상태: 로딩 중 메시지 표시
+    $('#partyList').html('<p>데이터를 불러오는 중입니다...</p>');
 
-                console.log("응답 데이터:", partyList);
+    $.ajax({
+        url: '<%=request.getContextPath()%>/findPartyProcess',
+        method: 'GET',
+        success: function(response) {
+            var partyList = response;
 
-                var partyHtml = '';
+            console.log("응답 데이터:", partyList);
 
-                if (partyList.length === 0) {
-                    partyHtml = '<p>등록된 모임이 없습니다.</p>';
-                } else {
-                    for (var i = 0; i < partyList.length; i++) {
-                        var party = partyList[i];
-                        // party-item 전체를 클릭 가능하도록 설정
-                        partyHtml += '<div class="party-item" onclick="redirectToJoinParty(\'' + party.partyIdx + '\')">';
-                        partyHtml += '<p><strong>모임 이름: </strong>' + party.partyNm + '</p>';
-                        partyHtml += '<p><strong>지역: </strong>' + party.partyRegion + '</p>';
-                        partyHtml += '<p><strong>작성자: </strong>' + party.userId + '</p>';
-                        partyHtml += '<p><strong>생성일: </strong>' + party.createdAt + '</p>';
-                        partyHtml += '</div>';
-                    }
+            var partyHtml = '';
+
+            if (partyList.length === 0) {
+                partyHtml = '<p>등록된 모임이 없습니다.</p>';
+            } else {
+                for (var i = 0; i < partyList.length; i++) {
+                    var party = partyList[i];
+                    // party-item 전체를 클릭 가능하도록 설정
+                    partyHtml += '<div class="party-item" onclick="redirectToJoinParty(\'' + party.partyIdx + '\')">';
+                    partyHtml += '<p><strong>모임 이름: </strong>' + party.partyNm + '</p>';
+                    partyHtml += '<p><strong>지역: </strong>' + party.partyRegion + '</p>';
+                    partyHtml += '<p><strong>작성자: </strong>' + party.userId + '</p>';
+                    partyHtml += '<p><strong>생성일: </strong>' + party.createdAt + '</p>';
+                    partyHtml += '</div>';
                 }
-
-                $('#partyList').html(partyHtml);
-            },
-            error: function(xhr, status, error) {
-                console.log("AJAX 오류:", error);
-                alert('모임 찾기 실패');
             }
-        });
-    }
+
+            // 데이터를 로드한 후 HTML 업데이트
+            $('#partyList').html(partyHtml);
+        },
+        error: function(xhr, status, error) {
+            console.log("AJAX 오류:", error);
+            $('#partyList').html('<p>데이터를 불러오는 중 오류가 발생했습니다.</p>');
+        }
+    });
+}
 
     // 가입 페이지로 이동하는 함수
-    function redirectToJoinParty(partyIdx) {
-        window.location.href = '<%=request.getContextPath()%>/partyDetailProcess?partyIdx=' + partyIdx;
-    }
-
-    // 나의 모임 버튼 클릭 시 데이터 로드
     function loadMyParties() {
-        $.ajax({
-            url: '<%=request.getContextPath()%>/myParties',
-            method: 'GET',
-            success: function(response) {
-                var myParties = response;
+    // 초기 상태: 로딩 중 메시지 표시
+    $('#myPartyList').html('<p>데이터를 불러오는 중입니다...</p>');
 
-                var myPartyHtml = '';
+    $.ajax({
+        url: '<%=request.getContextPath()%>/myParties',
+        method: 'GET',
+        success: function(response) {
+            var myParties = response;
 
-                if (myParties.length === 0) {
-                    myPartyHtml = '<p>참여한 모임이 없습니다.</p>';
-                } else {
-                    for (var i = 0; i < myParties.length; i++) {
-                        var party = myParties[i];
-                        myPartyHtml += '<div class="party-item" onclick="redirectToPartyRoom(\'' + party.partyIdx + '\')">';
-                        myPartyHtml += '<p><strong>모임 이름: </strong>' + party.partyNm + '</p>';
-                        myPartyHtml += '<p><strong>지역: </strong>' + party.partyRegion + '</p>';
-                        myPartyHtml += '<p><strong>작성자: </strong>' + party.userId + '</p>';
-                        myPartyHtml += '<p><strong>생성일: </strong>' + party.createdAt + '</p>';
-                        myPartyHtml += '</div>';
-                    }
+            var myPartyHtml = '';
+
+            if (myParties.length === 0) {
+                myPartyHtml = '<p>참여한 모임이 없습니다.</p>';
+            } else {
+                for (var i = 0; i < myParties.length; i++) {
+                    var party = myParties[i];
+                    myPartyHtml += '<div class="party-item" onclick="redirectToPartyRoom(\'' + party.partyIdx + '\')">';
+                    myPartyHtml += '<p><strong>모임 이름: </strong>' + party.partyNm + '</p>';
+                    myPartyHtml += '<p><strong>지역: </strong>' + party.partyRegion + '</p>';
+                    myPartyHtml += '<p><strong>작성자: </strong>' + party.userId + '</p>';
+                    myPartyHtml += '<p><strong>생성일: </strong>' + party.createdAt + '</p>';
+                    myPartyHtml += '</div>';
                 }
-
-                $('#myPartyList').html(myPartyHtml);
-            },
-            error: function(xhr, status, error) {
-                console.log("AJAX 오류:", error);
-                alert('나의 모임 조회 실패');
             }
-        });
-    }
+
+            // 데이터를 로드한 후 HTML 업데이트
+            $('#myPartyList').html(myPartyHtml);
+        },
+        error: function(xhr, status, error) {
+            console.log("AJAX 오류:", error);
+            $('#myPartyList').html('<p>데이터를 불러오는 중 오류가 발생했습니다.</p>');
+        }
+    });
+}
 
     // partyRoom으로 리다이렉트하는 함수 추가
     function redirectToPartyRoom(partyIdx) {
@@ -158,6 +161,35 @@ h1 {
 
 	<!-- 나의 모임 리스트 출력 영역 -->
 	<div id="myPartyList">
+	 <c:choose>
+        <c:when test="${not empty filteredData}">
+            <!-- 데이터가 있을 때 -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>모임 이름</th>
+                        <th>지역</th>
+                        <th>작성자</th>
+                        <th>생성일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="party" items="${filteredData}">
+                        <tr>
+                            <td>${party.partyNm}</td>
+                            <td>${party.partyRegion}</td>
+                            <td>${party.userId}</td>
+                            <td>${party.createdAt}</td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </c:when>
+        <c:otherwise>
+            <!-- 데이터가 없을 때 -->
+            <p>남성 사용자는 데이터를 볼 수 없습니다.</p>
+        </c:otherwise>
+    </c:choose>
 		<!-- AJAX로 데이터가 로드되면 여기에 표시됩니다 -->
 	</div>
 </div>
@@ -230,7 +262,38 @@ h1 {
 						<div class="photo">
 							<img src="./images/1.png" alt="모임 사진 1">
 						</div>
-						<div id="partyList" class="details"></div>
+						<div id="partyList" class="details">
+						<c:choose>
+    
+    <c:when test="${not empty filteredData}">
+        <table>
+            <thead>
+                <tr>
+                    <th>모임 이름</th>
+                    <th>지역</th>
+                    <th>작성자</th>
+                    <th>생성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach var="party" items="${filteredData}">
+                    <tr>
+                        <td>${party.partyNm}</td>
+                        <td>${party.partyRegion}</td>
+                        <td>${party.userId}</td>
+                        <td>${party.createdAt}</td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+    </c:when>
+
+   
+    <c:otherwise>
+        <p>남성 사용자는 데이터를 볼 수 없습니다.</p>
+    </c:otherwise>
+</c:choose>
+						</div>
 					</div>
 				</div>
 
