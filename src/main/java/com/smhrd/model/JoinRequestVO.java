@@ -8,6 +8,8 @@ public class JoinRequestVO {
     private String joinIntro;
     private char agreeYn;
     private Timestamp joinedAt;
+    
+    public JoinRequestVO() {}
 
     public JoinRequestVO(String userId, int partyIdx, String joinIntro, char agreeYn) {
         this.userId = userId;
@@ -22,6 +24,14 @@ public class JoinRequestVO {
         this.agreeYn = agreeYn;
         this.joinedAt = joinedAt;
     }
+    
+    public JoinRequestVO(String userId, String joinIntro, char agreeYn) {
+        this.userId = userId;
+        this.joinIntro = joinIntro;
+        this.agreeYn = agreeYn;
+    }
+    
+    
 
     // Getter와 Setter 추가
     public String getUserId() { return userId; }

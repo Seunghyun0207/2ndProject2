@@ -11,6 +11,10 @@ public class UserVO {
     private Date userAge;
     private String userRegion;
     private Timestamp joinedAt;
+    private String intro;
+    
+ // 기본 생성자
+    public UserVO() {}
 
     public UserVO(String userId, String userPw, String userName, String userGender, Date userAge, String userRegion, Timestamp joinedAt) {
         this.userId = userId;
@@ -21,7 +25,6 @@ public class UserVO {
         this.userRegion = userRegion;
         this.joinedAt = joinedAt;
     }
-    
     public UserVO(String userId, String userPw, String userName, String userRegion) {
     	this.userId = userId;
     	this.userPw = userPw;
@@ -42,6 +45,12 @@ public class UserVO {
         this.userId = userId;
         this.userName = userName;
     }
+    
+    public UserVO(String userId, String userName, String intro) {
+        this.userId = userId;
+        this.userName = userName;
+        this.intro = intro;
+    }
 
     // Getter와 Setter
     public String getUserId() {
@@ -50,6 +59,14 @@ public class UserVO {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+    
+    public String getIntro() {
+        return intro;
+    }
+    
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 
     public String getUserPw() {

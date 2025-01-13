@@ -31,23 +31,38 @@
         </thead>
         <tbody>
             <!-- 반복문을 통해 각 회원의 데이터를 출력 -->
-            <c:forEach var="request" items="${joinRequests}">
-                <tr>
-                    <!-- userId 출력 -->
-                    <td>${request.userId}</td>
-                    
-                    <!-- joinIntro 출력, 비어 있으면 "내용 없음" 출력 -->
-                    <td>${empty request.joinIntro ? '내용 없음' : request.joinIntro}</td>
-                    
-                    <!-- agreeYn 출력 -->
-                    <td>${request.agreeYn}</td>
-                </tr>
-            </c:forEach>
+           <c:choose>
+    <c:when test="${not empty pendingRequests}">
+        <c:forEach var="request" items="${pendingRequests}">
+            <tr>
+                <td>${request.userId}</td>
+                <td>${request.joinIntro}</td>
+                <td>
+                    <form action="acceptJoinRequest" method="post">
+    <input type="hidden" name="partyIdx" value="${partyIdx}">
+    <input type="hidden" name="userId" value="${request.userId}">
+    <button type="submit">수락</button>
+</form>
+                    <form action="rejectJoinRequest" method="post" style="display:inline;">
+                        <input type="hidden" name="partyIdx" value="${partyIdx}">
+                        <input type="hidden" name="userId" value="${request.userId}">
+                        <button type="submit">거절</button>
+                    </form>
+                </td>
+            </tr>
+        </c:forEach>
+    </c:when>
+    <c:otherwise>
+        <tr>
+            <td colspan="3">가입 요청이 없습니다.</td>
+        </tr>
+    </c:otherwise>
+</c:choose>
         </tbody>
     </table>
 
     <br>
-    <a href="index.jsp">홈으로 돌아가기</a>
+    <a href="main.jsp">홈으로 돌아가기</a>
 
     <style>
         body {

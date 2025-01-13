@@ -8,9 +8,11 @@
     </insert>
 
     <!-- 로그인 -->
-    <select id="loginUser" resultType="com.smhrd.model.UserVO">
-        SELECT * FROM tb_user WHERE user_id = #{userId} AND user_pw = #{userPw};
-    </select>
+    <select id="loginUser" parameterType="map" resultMap="UserResultMap">
+    SELECT user_id, user_pw, user_name, user_gender, user_age, user_region, joined_at
+    FROM tb_user
+    WHERE user_id = #{userId} AND user_pw = #{userPw};
+</select>
     
     <!-- 사용자 정보 조회 -->
     <select id="selectUserById" resultType="com.smhrd.model.UserVO">
@@ -45,14 +47,14 @@
     
     <!-- 지역에 맞는 모든 모임 가져오기 -->
 	<resultMap id="PartyResultMap" type="com.smhrd.model.PartyVO">
-	    <result property="partyIdx" column="party_idx"/>
-	    <result property="partyNm" column="party_nm"/>
-	    <result property="partyInfo" column="party_info"/>
-	    <result property="partyRegion" column="party_region"/>
-	    <result property="userId" column="user_id"/>
-	    <result property="createdAt" column="created_at"/>
-	</resultMap>
-	
+    <result property="partyIdx" column="party_idx"/>
+    <result property="partyNm" column="party_nm"/>
+    <result property="partyInfo" column="party_info"/>
+    <result property="partyRegion" column="party_region"/>
+    <result property="userId" column="user_id"/>
+    <result property="createdAt" column="created_at"/>
+</resultMap>
+
 	<select id="selectPartiesByRegion" resultMap="PartyResultMap">
 	    SELECT party_idx, party_nm, CAST(party_info AS CHAR) AS party_info, party_region, 
 	           user_id, created_at
@@ -62,10 +64,11 @@
 	
     <!-- 내가 가입한 모임 가져오기 -->
 	<select id="selectMyParties" resultMap="PartyResultMap">
-	    SELECT party_idx, party_nm, party_region, user_id, created_at
-	    FROM tb_party
-	    WHERE user_id = #{userId}
-	</select>
+    SELECT p.party_idx, p.party_nm, p.party_info, p.party_region, p.user_id, p.created_at
+    FROM tb_party_members pm
+    JOIN tb_party p ON pm.party_idx = p.party_idx
+    WHERE pm.user_id = #{userId};
+</select>
     
     <!-- 모임 상세정보 -->
 	<select id="selectPartyByIdx" resultMap="PartyResultMap">
@@ -77,9 +80,9 @@
 
     <!-- 모임 방 생성 -->
 	<insert id="insertParty" useGeneratedKeys="true" keyProperty="partyIdx">
-	    INSERT INTO tb_party (party_nm, party_info, party_region, party_file, user_id)
-	    VALUES (#{partyNm}, #{partyInfo}, #{partyRegion}, #{partyFile}, #{userId});
-	</insert>
+    INSERT INTO tb_party (party_nm, party_info, party_region, user_id, created_at)
+    VALUES (#{partyNm}, #{partyInfo}, #{partyRegion}, #{userId}, NOW());
+</insert>
     
     <!-- 특정 모임 방 정보 가져오기 -->
 	<select id="selectPartyById" resultMap="PartyResultMap">
@@ -174,11 +177,10 @@
 
 	<!-- join_intro 값을 정확히 매핑하는 ResultMap -->
 	<resultMap id="JoinRequestResultMap" type="com.smhrd.model.JoinRequestVO">
-	    <result property="userId" column="user_id"/>
-	    <result property="partyIdx" column="party_idx"/>
-	    <result property="joinIntro" column="join_intro"/>
-	    <result property="agreeYn" column="agree_yn"/>
-	</resultMap>
+    <result property="userId" column="user_id"/>
+    <result property="joinIntro" column="join_intro"/>
+    <result property="agreeYn" column="agree_yn"/>
+</resultMap>
     
     <!-- 특정 방의 신청자 정보 조회 -->
     <select id="selectJoinRequestsByPartyIdx" resultType="com.smhrd.model.JoinRequestVO">
@@ -188,17 +190,22 @@
     </select>
     
     <!-- 신청 가입 수락 및 변경 -->
-    <update id="updateJoinRequestStatus">
-	    UPDATE tb_joning
-	    SET agree_yn = #{agreeYn}
-	    WHERE party_idx = #{partyIdx} AND user_id = #{userId};
-	</update>
-	
+   <update id="updateJoinRequestStatus" parameterType="map">
+    UPDATE tb_joning
+    SET agree_yn = 'y'
+    WHERE party_idx = #{partyIdx} AND user_id = #{userId};
+</update>
+
 	<!-- 회원 목록을 가져오기 -->
 	<resultMap id="UserResultMap" type="com.smhrd.model.UserVO">
-	    <result property="userId" column="user_id" />
-	    <result property="userName" column="user_name" />
-	</resultMap>
+    <result property="userId" column="user_id"/>
+    <result property="userPw" column="user_pw"/>
+    <result property="userName" column="user_name"/>
+    <result property="userGender" column="user_gender"/>
+    <result property="userAge" column="user_age"/>
+    <result property="userRegion" column="user_region"/>
+    <result property="joinedAt" column="joined_at"/>
+</resultMap>
 
 	<select id="selectMembersByPartyIdx" resultMap="UserResultMap">
 	    SELECT u.user_id, u.user_name
@@ -215,22 +222,46 @@
 	</select>
 	
 	<!-- 특정 모임의 가입 신청 목록 가져오기 -->
-	<select id="selectPendingJoinRequests" resultType="com.smhrd.model.JoinRequestVO">
-	    SELECT join_idx, user_id, join_intro, agree_yn
-	    FROM tb_joning
-	    WHERE party_idx = #{partyIdx} AND agree_yn = 'n';
-	</select>
+	<select id="selectPendingJoinRequests" parameterType="int" resultMap="JoinRequestResultMap">
+    SELECT user_id, party_idx, join_intro, agree_yn, joined_at
+    FROM tb_joning
+    WHERE party_idx = #{partyIdx}
+      AND agree_yn = 'n';
+</select>
 	
 	<!-- 가입 신청 수락 -->
 	<update id="updateAgreeStatus">
-	    UPDATE tb_joning
-	    SET agree_yn = 'y'
-	    WHERE join_idx = #{joinIdx};
-	</update>
+    UPDATE tb_joning
+    SET agree_yn = 'y'
+    WHERE party_idx = #{partyIdx} AND user_id = #{userId};
+</update>
 	
 	<!-- 가입 신청 거절 -->
 	<delete id="deleteJoinRequest">
 	    DELETE FROM tb_joning
 	    WHERE join_idx = #{joinIdx};
 	</delete>
+	
+		<insert id="acceptJoinRequest" parameterType="map">
+    INSERT INTO tb_party_members (party_idx, user_id)
+    VALUES (#{partyIdx}, #{userId});
+</insert>
+
+	<delete id="rejectJoinRequest" parameterType="map">
+    DELETE FROM tb_join_requests
+    WHERE party_idx = #{partyIdx} AND user_id = #{userId}
+	</delete>
+	
+	<select id="selectMembersByPartyIdxFromMembers" resultMap="UserResultMap">
+    SELECT u.user_id, u.user_name, u.intro
+    FROM tb_party_members pm
+    JOIN tb_user u ON pm.user_id = u.user_id
+    WHERE pm.party_idx = #{partyIdx};
+</select>
+
+<insert id="insertPartyMember" parameterType="map">
+    INSERT INTO tb_party_members (party_idx, user_id, joined_at)
+    VALUES (#{partyIdx}, #{userId}, NOW());
+</insert>
+
 </mapper>

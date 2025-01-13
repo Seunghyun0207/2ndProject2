@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.HashMap;
@@ -29,28 +30,90 @@ public class PartyDAO {
 		}
 		return partyList;
 	}
+   
+
 
 	// 내가 가입한 모임 가져오기 (나의 모임)
 	public List<PartyVO> selectMyParties(String userId) {
-		SqlSession session = sqlSessionFactory.openSession();
-		List<PartyVO> myPartyList = null;
-		try {
-			myPartyList = session.selectList("com.smhrd.db.Mapper.selectMyParties", userId);
-			if (myPartyList == null || myPartyList.isEmpty()) {
-				System.out.println("No parties found for user: " + userId);
-			} else {
-				for (PartyVO party : myPartyList) {
-					if (party == null) {
-						System.out.println("Null party object found!");
-					} else {
-						System.out.println("Party name: " + party.getPartyNm()); // Log party name
-					}
-				}
-			}
-		} finally {
-			session.close();
-		}
-		return myPartyList;
+	    SqlSession session = sqlSessionFactory.openSession();
+	    List<PartyVO> myPartyList = null;
+
+	    try {
+	        // 쿼리 실행
+	        myPartyList = session.selectList("com.smhrd.db.Mapper.selectMyParties", userId);
+
+	        // 디버깅 로그 추가
+	        if (myPartyList == null || myPartyList.isEmpty()) {
+	            System.out.println("No parties found for user: " + userId);
+	        } else {
+	            System.out.println("Parties found for user: " + userId);
+	            for (PartyVO party : myPartyList) {
+	                System.out.println("Party: " + party.getPartyNm());
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        session.close();
+	    }
+
+	    return myPartyList != null ? myPartyList : new ArrayList<>();
+	}
+	// 가입 요청 수락
+	public boolean acceptJoinRequest(String userId, int partyIdx) {
+	    SqlSession session = sqlSessionFactory.openSession();
+	    boolean isSuccess = false;
+
+	    try {
+	        System.out.println("acceptJoinRequest 메서드 호출됨: userId=" + userId + ", partyIdx=" + partyIdx);
+
+	        // 쿼리 실행 파라미터 준비
+	        Map<String, Object> params = new HashMap<>();
+	        params.put("userId", userId);
+	        params.put("partyIdx", partyIdx);
+
+	        // tb_party_members 삽입 쿼리 실행
+	        int memberInsertCount = session.insert("com.smhrd.db.Mapper.insertPartyMember", params);
+	        System.out.println("Insert PartyMember 결과: " + memberInsertCount);
+
+	        // tb_joning 상태 업데이트 쿼리 실행
+	        int joinUpdateCount = session.update("com.smhrd.db.Mapper.updateJoinRequestStatus", params);
+	        System.out.println("Update JoinRequest 결과: " + joinUpdateCount);
+
+	        // 두 쿼리 실행 결과 확인
+	        if (memberInsertCount > 0 && joinUpdateCount > 0) {
+	            session.commit();
+	            isSuccess = true;
+	        } else {
+	            session.rollback();
+	            System.out.println("쿼리 실행 실패 - 롤백됨");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        session.rollback();
+	    } finally {
+	        session.close();
+	    }
+
+	    return isSuccess;
+	}
+
+	// 가입 요청 거절
+	public void rejectJoinRequest(String userId, int partyIdx) {
+	    SqlSession session = sqlSessionFactory.openSession();
+	    try {
+	        Map<String, Object> params = new HashMap<>();
+	        params.put("userId", userId);
+	        params.put("partyIdx", partyIdx);
+
+	        session.delete("com.smhrd.db.Mapper.rejectJoinRequest", params);
+	        session.commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        session.rollback();
+	    } finally {
+	        session.close();
+	    }
 	}
 
 	// 지역에 맞는 모임 목록 가져오기
@@ -67,19 +130,31 @@ public class PartyDAO {
 
 	// 모임 방 생성
 	public int insertParty(PartyVO party) {
-		SqlSession session = sqlSessionFactory.openSession(true); // Auto-commit
-		int cnt = 0;
-		try {
-			System.out.println("Inserting party: " + party.getPartyNm() + ", Info: " + party.getPartyInfo()); // 디버그 로그
-																												// 추가
-			// 모임 삽입
-			cnt = session.insert("com.smhrd.db.Mapper.insertParty", party);
-			// 생성된 partyIdx 값 확인
-			System.out.println("Generated partyIdx: " + party.getPartyIdx()); // 자동 생성된 partyIdx 출력
-			return party.getPartyIdx(); // 자동 생성된 partyIdx 반환
-		} finally {
-			session.close();
-		}
+	    SqlSession session = sqlSessionFactory.openSession();
+	    int result = 0;
+
+	    try {
+	        // tb_party에 데이터 삽입
+	        result = session.insert("com.smhrd.db.Mapper.insertParty", party);
+	        session.commit(); // party_idx가 생성된 후 commit하여 값 보장
+
+	        // tb_party_members에 데이터 삽입
+	        if (result > 0) {
+	            Map<String, Object> params = new HashMap<>();
+	            params.put("partyIdx", party.getPartyIdx()); // 자동 생성된 party_idx
+	            params.put("userId", party.getUserId());    // 방 생성자 user_id
+
+	            session.insert("com.smhrd.db.Mapper.insertPartyMember", params);
+	            session.commit();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        session.rollback();
+	    } finally {
+	        session.close();
+	    }
+
+	    return result;
 	}
 
 	// 특정 모임 방 정보 가져오기
@@ -222,14 +297,19 @@ public class PartyDAO {
 
 	// 특정 모임의 회원 목록 가져오기
 	public List<UserVO> getMembersByPartyIdx(int partyIdx) {
-		SqlSession session = sqlSessionFactory.openSession();
-		List<UserVO> members = null;
-		try {
-			members = session.selectList("com.smhrd.db.Mapper.selectMembersByPartyIdx", partyIdx);
-		} finally {
-			session.close();
-		}
-		return members;
+	    SqlSession session = sqlSessionFactory.openSession();
+	    List<UserVO> members = null;
+	    try {
+	        members = session.selectList("com.smhrd.db.Mapper.selectMembersByPartyIdxFromMembers", partyIdx);
+	        for (UserVO member : members) {
+	            System.out.println("Member ID: " + member.getUserId() + ", Intro: " + member.getIntro());
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        session.close();
+	    }
+	    return members;
 	}
 
 	// 특정 모임의 회원들의 자기소개글 가져오기
@@ -244,14 +324,45 @@ public class PartyDAO {
 		return introList;
 	}
 	
+	public List<JoinRequestVO> getPendingJoinRequests(int partyIdx) {
+	    SqlSession session = sqlSessionFactory.openSession();
+	    List<JoinRequestVO> requests = null;
+
+	    try {
+	        requests = session.selectList("com.smhrd.db.Mapper.selectPendingJoinRequests", partyIdx);
+
+	        // 디버깅 로그
+	        System.out.println("Pending requests for partyIdx: " + partyIdx);
+	        if (requests != null) {
+	            for (JoinRequestVO request : requests) {
+	                System.out.println("UserId: " + request.getUserId());
+	                System.out.println("Intro: " + request.getJoinIntro());
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        session.close();
+	    }
+
+	    return requests != null ? requests : new ArrayList<>();
+	}
 	public List<JoinRequestVO> getJoinRequestsByPartyIdx(int partyIdx) {
 	    SqlSession session = sqlSessionFactory.openSession();
 	    List<JoinRequestVO> joinRequests = null;
 	    try {
 	        joinRequests = session.selectList("com.smhrd.db.Mapper.selectJoinRequestsByPartyIdx", partyIdx);
+	        System.out.println("Retrieved JoinRequests: " + joinRequests);  // 디버깅 로그 추가
+	    } catch (Exception e) {
+	        e.printStackTrace();
 	    } finally {
 	        session.close();
 	    }
 	    return joinRequests;
 	}
+	
 }
+
+
+
+	

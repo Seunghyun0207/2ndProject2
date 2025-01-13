@@ -74,34 +74,59 @@
                 </div>
 
                 <div class="wrapper_tabcontent">
-                    <div id="Meeting1" class="tabcontent active">
-                        <section>
-                            <img src="<%= request.getContextPath() %>/images/7.jpg" alt="Meeting">
-                        </section>
-                        <section class="meeting-introduction">
-                            <h2>모임 소개</h2>
-                            <p>${party.partyInfo}</p>
-                        </section>
-                        <section class="meeting-notices">
-                            <h2>모임 공지사항</h2>
-                            <p>${party.partyNotice}</p>
-                        </section>
-                        <% 
-                            PartyVO party = (PartyVO) request.getAttribute("party");
-                            UserVO user = (UserVO) session.getAttribute("user");
-                        %>
-                        <% if (party != null && user != null && user.getUserId().equals(party.getUserId())) { %>
-                        <section class="admin-section" id="adminSection">
-                            <a href="editParty.jsp?partyIdx=<%= party.getPartyIdx() %>">
-                                <button type="button" id="editButton">수정하기</button>
-                            </a>
-                            <form action="viewMembers" method="get">
-                                <input type="hidden" name="partyIdx" value="<%= party.getPartyIdx() %>">
-                                <button type="submit">회원 정보 보기</button>
-                            </form>
-                        </section>
-                        <% } %>
-                    </div>
+                   <div id="Meeting1" class="tabcontent active">
+    <section>
+        <img src="<%= request.getContextPath() %>/images/7.jpg" alt="Meeting">
+    </section>
+    <section class="meeting-introduction">
+        <h2>모임 소개</h2>
+        <p>${party.partyInfo}</p>
+    </section>
+    <section class="meeting-notices">
+        <h2>모임 공지사항</h2>
+        <p>${party.partyNotice}</p>
+    </section>
+
+    <!-- 가입된 멤버 목록 추가 -->
+    <section class="member-list">
+        <h2>가입된 멤버 목록</h2>
+        <table border="1">
+            <tr>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>소개</th>
+            </tr>
+            <c:forEach var="member" items="${members}">
+                <tr>
+                    <td>${member.userId}</td>
+                    <td>${member.userName}</td>
+                    <td>${member.intro != null ? member.intro : "소개 없음"}</td>
+                </tr>
+            </c:forEach>
+        </table>
+        <c:if test="${not empty message}">
+            <div style="color: green; font-weight: bold;">
+                ${message}
+            </div>
+        </c:if>
+    </section>
+
+    <% 
+        PartyVO party = (PartyVO) request.getAttribute("party");
+        UserVO user = (UserVO) session.getAttribute("user");
+    %>
+    <% if (party != null && user != null && user.getUserId().equals(party.getUserId())) { %>
+    <section class="admin-section" id="adminSection">
+        <a href="editParty.jsp?partyIdx=<%= party.getPartyIdx() %>">
+            <button type="button" id="editButton">수정하기</button>
+        </a>
+        <form action="viewMembers" method="get">
+            <input type="hidden" name="partyIdx" value="<%= party.getPartyIdx() %>">
+            <button type="submit">회원 정보 보기</button>
+        </form>
+    </section>
+    <% } %>
+</div>
 
                     <div id="Board1" class="tabcontent">
                         <div class="feed-item">

@@ -1,5 +1,8 @@
 package com.smhrd.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -25,13 +28,20 @@ public class UserDAO {
         SqlSession session = sqlSessionFactory.openSession();
         UserVO user = null;
         try {
-            user = session.selectOne("com.smhrd.db.Mapper.loginUser", new UserVO(userId, userPw, null, null, null, null, null));
+            // 파라미터를 Map으로 생성
+            Map<String, Object> params = new HashMap<>();
+            params.put("userId", userId);
+            params.put("userPw", userPw);
+
+            // selectOne 호출
+            user = session.selectOne("com.smhrd.db.Mapper.loginUser", params);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             session.close();
         }
         return user;
     }
-    
     // 사용자 정보 조회
     public UserVO selectUserById(String userId) {
         SqlSession session = sqlSessionFactory.openSession();

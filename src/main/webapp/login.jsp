@@ -34,7 +34,6 @@
 					name="userPw" class="card__input" type="password"
 					placeholder="비밀번호를 입력하세요" required /><br>
 				<div id="errorMessage" class="error hidden">로그인 정보가 올바르지 않습니다.</div>
-
 				<div class="button-container">
 					<button class="card__button" type="submit">
 						<span>로그인</span>
