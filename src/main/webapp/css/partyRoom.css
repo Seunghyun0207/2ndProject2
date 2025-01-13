@@ -1,122 +1,155 @@
 
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i|IBM+Plex+Sans+Condensed:400,400i|IBM+Plex+Sans:100,100i,400,400i,700,700i|IBM+Plex+Serif:400,400i");
-#Notice1 {
-    display: block; /* 또는 active 클래스에 따라 설정 */
-    width: 100%;
-    height: 400px; /* 부모 요소의 높이 명시 */
+/* .about 클래스: 화면 오른쪽 아래에 고정된 버튼 스타일 */
+/* Home 버튼 컨테이너 스타일 */
+.home-button-container {
+    position: absolute; /* 절대 위치 설정 */
+    top: 20px;          /* 상단에서 20px 만큼 떨어지게 설정 */
+    right: 20px;        /* 우측에서 20px 만큼 떨어지게 설정 */
+    z-index: 1000;      /* 다른 요소보다 위에 보이도록 설정 */
 }
 
-#Notice1.active {
-    display: block; /* 탭 전환 시 활성화 */
+/* Home 버튼의 스타일 */
+.home-button {
+    display: inline-flex; /* 텍스트와 아이콘을 가로로 배치 */
+    align-items: center;  /* 세로로 중앙 정렬 */
+    justify-content: center; /* 가로로 중앙 정렬 */
+    padding: 12px 25px; /* 버튼 안의 여백 설정 */
+    background-color: rgb(255, 255, 255); /* 버튼 배경색 (녹색 계열) */
+    color: rgb(0, 128, 255);         /* 텍스트 색은 흰색 */
+    font-size: 18px;      /* 폰트 크기 */
+    font-weight: bold;    /* 폰트 두께 설정 */
+    border-radius: 30px;  /* 버튼을 둥글게 만들기 */
+    text-decoration: none; /* 링크의 밑줄 제거 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 버튼에 그림자 추가 */
+    transition: all 0.3s ease; /* 모든 변화에 0.3초의 부드러운 전환 추가 */
 }
 
-#mapContent {
-    display: block;
-    width: 100%;
-    height: 400px; /* 부모 요소의 높이 명시 */
+/* Hover 효과: 마우스를 올리면 버튼 색상과 그림자가 바뀌도록 */
+.home-button:hover {
+    background-color: rgb(255, 255, 255); /* 마우스 오버 시 배경색 약간 진하게 */
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2); /* 그림자 크기 증가 */
 }
 
-#map {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    display: block; /* 반드시 표시되도록 설정 */
+/* Focus 효과: 키보드로 선택했을 때도 스타일을 적용 */
+.home-button:focus {
+    outline: none; /* 외곽선 제거 */
+    box-shadow: 0px 0px 5px 2px rgba(72, 133, 237, 0.5); /* 파란색 테두리 효과 */
 }
-
 .about {
   position: fixed; /* 위치 고정: 화면 오른쪽 아래에 고정 */
   z-index: 10;
   bottom: 20px; /* 아래쪽 여백 증가 */
   right: 20px; /* 오른쪽 여백 증가 */
-  width: 60px; /* 너비 확대 */
-  height: 60px; /* 높이 확대 */
+  width: 60px; /* 버튼의 너비 */
+  height: 60px; /* 버튼의 높이 */
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  transition: all 0.2s ease;
+  justify-content: flex-end; /* 아이템을 오른쪽 끝에 정렬 */
+  align-items: flex-end; /* 아이템을 아래쪽 끝에 정렬 */
+  transition: all 0.2s ease; /* 모든 속성에 애니메이션 효과 추가 */
 }
 
+/* .about 내부 배경 링크 스타일 */
 .about .bg_links {
-  width: 60px; /* 너비 확대 */
-  height: 60px; /* 높이 확대 */
-  border-radius: 100%;
+  width: 60px; /* 배경 링크의 너비 */
+  height: 60px; /* 배경 링크의 높이 */
+  border-radius: 100%; /* 원형으로 만듦 */
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(5px);
+  justify-content: center; /* 중앙 정렬 */
+  align-items: center; /* 중앙 정렬 */
+  background-color: rgba(255, 255, 255, 0.2); /* 배경색 설정 */
+  backdrop-filter: blur(10px); /* 배경에 블러 효과 적용 */
   position: absolute;
 }
 
+/* .about 로고 스타일 */
 .about .logo {
-  width: 60px; /* 로고 크기 확대 */
-  height: 60px; /* 로고 크기 확대 */
-  z-index: 9;
-  background-size: 60%; /* 로고 배경 크기 확대 */
-  opacity: 0.9;
-  transition: all 1s 0.2s ease;
+  width: 60px; /* 로고 크기 */
+  height: 60px; /* 로고 크기 */
+  z-index: 9; /* z-index 조정 */
+  background-size: 100%; /* 배경 이미지 크기 조정 */
+  background-image: src("../images/mypageicon.png");
+  transition: all 1s 0.2s ease; /* 애니메이션 설정 */
   bottom: 0;
   right: 0;
 }
 
+/* 소셜 아이콘 스타일 */
 .about .social .icon {
-  width: 100%;
-  height: 100%;
-  background-size: 30px; /* 아이콘 크기 확대 */
+  width: 100%; /* 아이콘의 너비 */
+  height: 100%; /* 아이콘의 높이 */
+  background-size: 100px; /* 아이콘 크기 확대 */
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center; /* 아이콘 중앙 정렬 */
   background-color: transparent;
   display: flex;
-  transition: all 0.2s ease, background-color 0.4s ease;
-  opacity: 0;
-  border-radius: 100%;
+  transition: all 0.2s ease, background-color 0.4s ease; /* 애니메이션 설정 */
+  opacity: 0; /* 기본 상태에서 아이콘은 보이지 않게 설정 */
+  border-radius: 100%; /* 원형 모양 */
 }
 
+/* .about:hover 상태: hover 시 크기와 애니메이션 효과 추가 */
 .about:hover {
-  width: 120px; /* 너비 확대 */
-  height: 120px; /* 높이 확대 */
-  transition: all 0.6s cubic-bezier(0.64, 0.01, 0.07, 1.65);
+  width: 120px; /* hover 시 너비 확대 */
+  height: 120px; /* hover 시 높이 확대 */
+  transition: all 0.6s cubic-bezier(0.64, 0.01, 0.07, 1.65); /* hover 애니메이션 */
 }
 
+/* .about:hover 상태에서 로고의 투명도 변경 */
 .about:hover .logo {
-  opacity: 1;
+  opacity: 1; /* 로고가 보이도록 설정 */
   transition: all 0.6s ease;
 }
 
+/* .about:hover 상태에서 소셜 아이콘의 투명도 변경 */
 .about:hover .social {
-  opacity: 1;
+  opacity: 1; /* 소셜 아이콘이 보이도록 설정 */
 }
 
+/* 소셜 아이콘 hover 상태에서의 애니메이션 */
 .about:hover .social .icon {
-  opacity: 0.9;
+  opacity: 0.9; /* 아이콘의 투명도 조정 */
 }
 
+/* 소셜 아이콘 hover 시 크기 확대 */
 .about:hover .social:hover {
-  background-size: 35px; /* 아이콘 호버 시 크기 확대 */
+  background-size: 35px; /* 아이콘 크기 확대 */
 }
 
+/* 소셜 아이콘 hover 상태에서 배경 크기 조정 */
 .about:hover .social:hover .icon {
-  background-size: 70%; /* 아이콘 호버 시 배경 크기 확대 */
+  background-size: 70%; /* 배경 크기 확대 */
 }
 
+/* .about:hover 상태에서 포트폴리오 아이콘 위치 변경 */
 .about:hover .social.portfolio {
   right: 0;
   bottom: calc(100% - 60px); /* 위치 조정 */
   transition: all 0.3s 0s cubic-bezier(0.64, 0.01, 0.07, 1.65);
 }
 
-.about:hover .social.dribbble {
-  bottom: 50%;
-  right: 50%;
-  transition: all 0.3s 0.15s cubic-bezier(0.64, 0.01, 0.07, 1.65);
-}
-
+/* .about:hover 상태에서 LinkedIn 아이콘 위치 변경 */
 .about:hover .social.linkedin {
   bottom: 0;
   right: calc(100% - 60px); /* 위치 조정 */
   transition: all 0.3s 0.25s cubic-bezier(0.64, 0.01, 0.07, 1.65);
 }
 
+/* 포트폴리오 아이콘에 배경 이미지 추가 */
+.about .social.portfolio {
+  background-image: url('../images/mypageicon.png'); /* 배경 이미지 설정 */
+  background-size: cover; /* 이미지를 요소 크기에 맞게 조정 */
+  background-position: center; /* 이미지가 중앙에 오도록 설정 */
+  background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
+}
+
+/* LinkedIn 아이콘에 배경 이미지 추가 */
+.about .social.linkedin {
+  background-image: url('../images/logouticon.png'); /* 배경 이미지 설정 */
+  background-size: cover; /* 이미지를 요소 크기에 맞게 조정 */
+  background-position: center; /* 이미지가 중앙에 오도록 설정 */
+  background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
+}
 
 /* main 1*/
 /* main 2*/
@@ -152,31 +185,30 @@ body {
   }
 }
 
-/* Tabs menu */
+/* 탭 컨테이너 */
 .tabs {
   margin: 0;
   background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between; /* 탭을 균등하게 배치 */
+  align-items: center; /* 탭을 세로로 중앙 정렬 */
   height: 80px;
-  border-radius: 2px 2px 0px 0px;
+  border-radius: 2px 2px 0px 0px; /* 위쪽 모서리 둥글게 */
 }
+
 @media screen and (max-width: 512px) {
   .tabs {
-    height: 40px;
+    height: 40px; /* 작은 화면에서는 탭 높이 조정 */
   }
 }
 
-/* Tab Links */
+/* 탭 링크 - 각 탭을 클릭할 수 있는 버튼 */
 .tablinks {
   background: transparent;
-  background-image: linear-gradient(90deg, transparent 70%, rgba(255, 255, 255, 0.2) 100%);
   border: none;
   outline: none;
   cursor: pointer;
-  width: 25%;
-  /*change depending on the number of tabs*/
+  width: 25%; /* 탭의 개수에 따라 너비 조정 */
   height: 80px;
   position: relative;
   display: flex;
@@ -187,15 +219,16 @@ body {
   overflow: hidden;
   transition: 0.3s ease;
 }
+
 @media screen and (max-width: 512px) {
   .tablinks {
-    height: 40px;
-    font-size: 12px;
+    height: 40px; /* 작은 화면에서 높이 조정 */
+    font-size: 12px; /* 모바일에서는 글자 크기 작게 */
   }
 }
 
+/* 탭 링크의 before 효과 - 탭 아래 선을 만들기 위한 스타일 */
 .tablinks:before {
-  background-image: linear-gradient(135deg, #7a7a7a 0%, #2dc034 100%);
   content: "";
   width: 100%;
   height: 0px;
@@ -206,19 +239,20 @@ body {
   z-index: 2;
 }
 
-/*tab buttons hover*/
+/* 탭 링크 hover 효과 - 선이 가득 차는 효과 */
 .tablinks:hover::before {
   height: 100%;
   z-index: 2;
   bottom: 0;
 }
+
 @media screen and (max-width: 512px) {
   .tablinks:hover::before {
-    height: 0;
+    height: 0; /* 작은 화면에서는 선 효과 제거 */
   }
 }
 
-/* Tab active */
+/* 활성 탭 스타일 - 탭이 선택될 때 */
 .tablinks.active {
   background-color: white;
   z-index: 0;
@@ -228,12 +262,14 @@ body {
   bottom: 0px;
   overflow: hidden;
 }
+
 @media screen and (max-width: 512px) {
   .tablinks.active {
-    height: 60px;
+    height: 60px; /* 작은 화면에서 활성화된 탭의 높이 조정 */
   }
 }
 
+/* 활성 탭의 before 스타일 */
 .tablinks.active:before {
   content: "";
   width: 100%;
@@ -242,7 +278,7 @@ body {
   left: 0;
 }
 
-/* Tabs text */
+/* 탭 텍스트 스타일 */
 .tablinks.active p,
 .tablinks.active:hover p {
   opacity: 1;
@@ -269,14 +305,15 @@ body {
   color: white;
   opacity: 1;
 }
+
 @media screen and (max-width: 512px) {
   .tablinks:hover p {
     color: #686868;
-    opacity: 0.6;
+    opacity: 0.6; /* 작은 화면에서 hover 시 색상 조정 */
   }
 }
 
-/* Tabs text bigger */
+/* 탭 텍스트 크기 */
 .tablinks p:before {
   content: attr(data-title);
   position: absolute;
@@ -293,23 +330,24 @@ body {
   font-weight: 600;
   top: 110%;
 }
+
 @media screen and (max-width: 512px) {
   .tablinks p:before {
-    display: none;
+    display: none; /* 작은 화면에서는 텍스트 크기 효과 제거 */
   }
 }
 
+/* 탭 hover 시 텍스트 크기 변화 */
 .tablinks:hover p:before {
   opacity: 0.1;
   font-size: 40px;
   top: -80%;
 }
 
-/* tab content */
+/* 탭 내용 영역 */
 .wrapper_tabcontent {
   background-color: white;
   margin-top: 0px;
-  z-index: 1;
   position: relative;
   opacity: 1;
   padding: 40px 60px;
@@ -318,11 +356,13 @@ body {
   top: 0;
 }
 
+/* 탭 내용 기본 숨김 상태 */
 .tabcontent {
   display: none;
   min-height: 180px;
 }
 
+/* 탭 내용 전환 효과 */
 @keyframes tabEffect {
   from {
     top: -40px;
@@ -331,12 +371,13 @@ body {
     top: 0px;
   }
 }
+
 .tabcontent.active {
   transition: all 1s ease;
   display: block;
 }
 
-/* Tab content line */
+/* 탭 내용 하단 선 */
 .wrapper_tabcontent:after {
   content: "";
   height: 5px;
@@ -349,7 +390,7 @@ body {
   transition: all 1s ease;
 }
 
-/* Title */
+/* 탭 내용 제목 */
 .tabcontent h3 {
   font-size: 40px;
   top: 75px;
@@ -365,12 +406,14 @@ body {
   padding: 0;
   animation: city 1s ease;
 }
+
 @media screen and (max-width: 512px) {
   .tabcontent h3 {
-    top: 65px;
+    top: 65px; /* 작은 화면에서 제목 위치 조정 */
   }
 }
 
+/* 탭 제목 애니메이션 */
 @keyframes city {
   from {
     left: -150px;
@@ -379,10 +422,10 @@ body {
     left: -90px;
   }
 }
-/* Text*/
+
+/* 탭 내용 텍스트 */
 .tabcontent p {
   color: #333;
-  /* color: #686868; */
   margin: 0;
   padding: 0;
   line-height: 28px;
@@ -393,13 +436,15 @@ body {
   font-size: 16px;
   font-family: "IBM Plex Sans", sans-serif;
 }
+
 @media screen and (max-width: 512px) {
   .tabcontent p {
-    font-size: 14px;
+    font-size: 14px; /* 작은 화면에서 글자 크기 조정 */
     line-height: 26px;
   }
 }
 
+/* 텍스트 애니메이션 */
 @keyframes fadeEffect {
   from {
     opacity: 0;
@@ -411,10 +456,11 @@ body {
   }
 }
 
+
 /* ✅ 추가된 고정 배경 이미지 설정 */
 body::before {
   content: "";
-  background: url('images/1.png') no-repeat center center/cover;
+  background-color: rgb(0, 128, 255);
   background-attachment: fixed; /* 배경 이미지 고정 */
   position: fixed;
   top: 0;
@@ -450,14 +496,14 @@ h1 {
 .upload-container button {
   padding: 5px 10px;
   border: none;
-  background-color: #4caf50;
+  background-color: rgb(0, 128, 255);
   color: white;
   border-radius: 5px;
   cursor: pointer;
 }
 
 .upload-container button:hover {
-  background-color: #388e3c;
+  background-color: rgb(0, 128, 255);
 }
 
 
@@ -521,7 +567,7 @@ h1 {
   padding: 10px 20px; /* 버튼 안쪽 여백 설정 (상하 10px, 좌우 20px) */
   font-size: 16px; /* 글자 크기 설정 */
   color: #fff; /* 글자 색을 흰색으로 설정 */
-  background-color: #0bd329; /* 기본 배경색은 파란색 */
+  background-color: rgb(0, 128, 255); /* 기본 배경색은 파란색 */
   border: none; /* 버튼 테두리 제거 */
   border-radius: 5px; /* 버튼 모서리를 둥글게 처리 */
   cursor: pointer; /* 커서를 버튼 모양으로 변경 */
@@ -530,35 +576,35 @@ h1 {
 
 /* 버튼을 hover했을 때의 효과 */
 .post-actions button:hover {
-  background-color: #16ca19; /* 배경색을 어두운 파란색으로 변경 */
+  background-color: rgb(0, 128, 255); /* 배경색을 어두운 파란색으로 변경 */
   transform: scale(1.05); /* 버튼을 조금 키움 */
 }
 
 /* 버튼을 클릭했을 때(활성화 상태) */
 .post-actions button:active {
-  background-color: #14ce27; /* 배경색을 더 어두운 파란색으로 변경 */
+  background-color: rgb(0, 128, 255); /* 배경색을 더 어두운 파란색으로 변경 */
 }
 
 /* 개별 버튼에 대해 색상 설정 */
 
 /* "좋아요" 버튼: 초록색 */
 .like-btn {
-  background-color: #1f7433; /* 기본 배경색 초록색 */
+  background-color: rgb(0, 128, 255); /* 기본 배경색 초록색 */
 }
 
 /* "좋아요" 버튼을 hover했을 때 */
 .like-btn:hover {
-  background-color: #1f7433; /* 배경색을 어두운 초록색으로 변경 */
+  background-color: rgb(0, 128, 255); /* 배경색을 어두운 초록색으로 변경 */
 }
 
 /* "공유하기" 버튼: 파란색 */
 .share-btn {
-  background-color: #1f7433; /* 기본 배경색 파란색 */
+  background-color: rgb(0, 128, 255); /* 기본 배경색 파란색 */
 }
 
 /* "공유하기" 버튼을 hover했을 때 */
 .share-btn:hover {
-  background-color: #1f7433; /* 배경색을 어두운 파란색으로 변경 */
+  background-color: rgb(0, 128, 255); /* 배경색을 어두운 파란색으로 변경 */
 }
 
 /*  */
@@ -701,7 +747,7 @@ h1 {
   margin: 5px; /* 버튼 간의 간격을 조금 더 넓게 */
   padding: 10px; /* 버튼 여백 증가 */
   border: none;
-  background-color: #10d921;  /* 버튼 배경색 */
+  background-color: rgb(0, 128, 255);  /* 버튼 배경색 */
   cursor: pointer;
   font-size: 14px; /* 버튼 텍스트 크기 증가 */
 }
@@ -786,7 +832,7 @@ h1 {
 
 /* 활성화된 탭 버튼 강조 스타일 */
 .tablinks.active {
-  background-color: #4CAF50; /* 활성화된 버튼의 배경색 */
+  background-color: white; /* 활성화된 버튼의 배경색 */
   color: rgb(10, 0, 0); /* 활성화된 버튼의 글자색 */
 }
 
@@ -811,7 +857,7 @@ h1 {
 /* 검색 버튼 스타일 */
 .search-bar button {
   padding: 10px 20px; /* 버튼 내부 여백 */
-  background-color: #4CAF50; /* 버튼 배경색 */
+  background-color: rgb(0, 128, 255); /* 버튼 배경색 */
   color: white; /* 버튼 글자색 */
   border: none; /* 경계선 없애기 */
   border-radius: 5px; /* 둥글게 처리 */
@@ -820,7 +866,7 @@ h1 {
 
 /* 검색 버튼에 마우스를 올렸을 때 색상 변경 */
 .search-bar button:hover {
-  background-color: #45a049; /* 버튼 배경색 변경 */
+  background-color: rgb(0, 128, 255); /* 버튼 배경색 변경 */
 }
 
 /* 전체 컨테이너 */
@@ -895,7 +941,7 @@ h1 {
 /* 좋아요, 공유 버튼 스타일 */
 .like-button, .share-button, .edit-button {
   padding: 10px;
-  background-color: #4CAF50;
+  background-color: rgb(0, 128, 255);
   color: white;
   border: none;
   border-radius: 5px;
@@ -903,7 +949,7 @@ h1 {
 }
 
 .like-button:hover, .share-button:hover {
-  background-color: #45a049;
+  background-color: rgb(0, 128, 255);
 }
 
 /* 댓글 섹션 */
@@ -928,7 +974,7 @@ h1 {
 
 .comment-submit {
   padding: 12px;
-  background-color: #4CAF50;
+  background-color: rgb(0, 128, 255);
   color: white;
   border: none;
   border-radius: 25px;
@@ -939,11 +985,11 @@ h1 {
 }
 
 .comment-submit:hover {
-  background-color: #45a049;
+  background-color: rgb(0, 128, 255);
 }
 
 .comment-input:focus {
-  border-color: #4CAF50;
+  border-color: rgb(0, 128, 255);
 }
 
 
@@ -982,90 +1028,47 @@ h1 {
    ============================== */
 
 /* 이벤트 게시판 영역 스타일 */
+/* 이벤트 게시판 영역 스타일 */
 .event1-board {
   padding: 20px; /* 게시판 여백 */
   background-color: #f9f9f9; /* 게시판 배경색 */
   border-radius: 8px; /* 게시판 테두리 둥글게 */
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* 게시판 그림자 효과 */
   margin-top: 20px; /* 위쪽 여백 */
-}
-
-/* 이벤트 항목 스타일 */
-.event-item {
-  background-color: #fff; /* 항목 배경색 */
-  border-radius: 8px; /* 항목 테두리 둥글게 */
-  padding: 20px; /* 항목 내부 여백 */
-  margin-bottom: 20px; /* 항목 간 간격 */
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-  transition: box-shadow 0.3s ease; /* 그림자 전환 효과 */
-}
-
-/* 이벤트 항목에 마우스를 올렸을 때 그림자 강조 */
-.event-item:hover {
-  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.2); /* 마우스를 올렸을 때 그림자 강조 */
-}
-
-/* 이벤트 제목 스타일 */
-.event-title {
-  font-size: 1.5rem; /* 제목 폰트 크기 */
-  font-weight: bold; /* 제목 두껍게 */
-  margin-bottom: 10px; /* 제목과 날짜 간 간격 */
-}
-
-/* 이벤트 날짜 스타일 */
-.event-date {
-  font-size: 1rem; /* 날짜 폰트 크기 */
-  color: #888; /* 날짜 색상 */
-  margin-bottom: 10px; /* 날짜와 내용 간 간격 */
-}
-
-/* 이벤트 장소 스타일 */
-.event-location {
-  font-size: 1rem; /* 장소 폰트 크기 */
-  color: #333; /* 장소 색상 */
-  margin-bottom: 15px; /* 장소와 내용 간 간격 */
-}
-
-/* 이벤트 내용 스타일 */
-.event-content {
-  font-size: 1rem; /* 내용 폰트 크기 */
-  color: #333; /* 내용 텍스트 색상 */
-}
-/* 프로필 이미지를 그리드 형식으로 배치 */
-.post-header {
   display: grid; /* 그리드 레이아웃 */
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* 자동으로 120px 크기의 칸을 만들어 이미지 배치 */
-  gap: 15px; /* 이미지 간의 간격 */
-  justify-items: center; /* 이미지 중앙 정렬 */
-  padding: 10px;
+  grid-template-columns: repeat(3, 1fr); /* 3열 그리드 */
+  grid-gap: 20px; /* 그리드 간격 */
+  justify-items: center; /* 그리드 아이템 중앙 정렬 */
 }
 
-/* 프로필 이미지 스타일 */
-.profile-pic {
-  width: 100%; /* 이미지가 그리드 셀을 꽉 채우도록 */
-  height: auto; /* 비율 유지 */
-  border-radius: 8px; /* 둥근 모서리 */
-  object-fit: cover; /* 이미지 크기가 셀을 꽉 채우도록 */
-  transition: transform 0.3s ease; /* 마우스를 올렸을 때 확대 효과 */
-}
-
-/* 이미지에 마우스를 올렸을 때 효과 */
-.profile-pic:hover {
-  transform: scale(1.1); /* 이미지를 살짝 확대 */
-}
-/* 각 이미지에 카드 스타일 추가 */
-.profile-pic-wrapper {
+/* 각 이미지 카드 스타일 */
+.event-image-wrapper {
   position: relative;
-  overflow: hidden;
+  width: 100%; /* 이미지 카드가 부모의 너비를 꽉 채우도록 */
+  overflow: hidden; /* 카드 밖으로 이미지가 나가지 않게 */
   border-radius: 8px; /* 둥근 모서리 */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* 마우스를 올렸을 때 카드 확대 및 그림자 강조 */
-.profile-pic-wrapper:hover {
+/* 마우스를 올렸을 때 이미지 카드 확대 및 그림자 강조 */
+.event-image-wrapper:hover {
   transform: scale(1.05); /* 살짝 확대 */
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
+}
+
+/* 이미지 스타일 */
+.event-image {
+  width: 100%; /* 이미지가 부모 크기를 꽉 채우도록 */
+  height: 200px; /* 고정된 높이 */
+  object-fit: cover; /* 비율 유지하며 크기 맞추기 */
+  border-radius: 8px; /* 둥근 모서리 */
+  transition: transform 0.3s ease; /* 마우스를 올렸을 때 확대 효과 */
+}
+
+/* 이미지를 마우스 오버 시 확대 */
+.event-image-wrapper:hover .event-image {
+  transform: scale(1.1); /* 이미지 확대 */
 }
 
 
@@ -1117,4 +1120,3 @@ h1 {
   font-size: 1rem; /* 내용 폰트 크기 */
   color: #333; /* 내용 텍스트 색상 */
 }
-

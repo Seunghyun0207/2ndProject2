@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.smhrd.db.Mapper">
     <!-- 회원가입 -->
-    <insert id="insertUser" parameterType="com.smhrd.model.UserVO">
-    INSERT INTO tb_user (user_id, user_pw, user_name, user_gender, user_age, user_region, joined_at)
-    VALUES (#{userId}, #{userPw}, #{userName}, #{userGender}, #{userAge}, #{userRegion}, NOW());
-</insert>
+    <insert id="insertUser">
+        INSERT INTO tb_user (user_id, user_pw, user_name, user_gender, user_age, user_region)
+        VALUES (#{userId}, #{userPw}, #{userName}, #{userGender}, #{userAge}, #{userRegion});
+    </insert>
 
     <!-- 로그인 -->
     <select id="loginUser" parameterType="map" resultMap="UserResultMap">
@@ -38,12 +38,14 @@
         SELECT COUNT(*) FROM tb_user WHERE user_id = #{userId};
     </select>
     
-
-
     <!-- 지역에 맞는 모든 모임 가져오기 -->
-    <select id="selectAllParties" resultType="com.smhrd.model.PartyVO">
-        SELECT * FROM tb_party WHERE party_region = #{userRegion};
-    </select>
+<select id="selectAllParties" resultType="com.smhrd.model.PartyVO">
+    SELECT * FROM tb_party
+    WHERE party_region = #{userRegion}
+    AND EXISTS (
+        SELECT 1 FROM tb_user u WHERE u.user_id = #{userId} AND u.user_gender = 'F'
+    );
+</select>
     
     <!-- 지역에 맞는 모든 모임 가져오기 -->
 	<resultMap id="PartyResultMap" type="com.smhrd.model.PartyVO">
@@ -67,7 +69,10 @@
     SELECT p.party_idx, p.party_nm, p.party_info, p.party_region, p.user_id, p.created_at
     FROM tb_party_members pm
     JOIN tb_party p ON pm.party_idx = p.party_idx
-    WHERE pm.user_id = #{userId};
+    WHERE pm.user_id = #{userId}
+    AND EXISTS (
+        SELECT 1 FROM tb_user u WHERE u.user_id = #{userId} AND u.user_gender = 'F'
+    );
 </select>
     
     <!-- 모임 상세정보 -->
@@ -264,21 +269,11 @@
     VALUES (#{partyIdx}, #{userId}, NOW());
 </insert>
 
-<select id="getUserGender" parameterType="string" resultType="string">
-    SELECT user_gender
-    FROM tb_user
-    WHERE user_id = #{userId};
-</select>
-
-<select id="getDataForMale" resultType="com.smhrd.model.UserVO">
-    SELECT user_id, user_name, user_gender
-    FROM tb_user
-    WHERE user_gender = 'M';
-</select>
-
-<select id="getAllData" resultType="com.smhrd.model.PartyVO">
-    SELECT party_idx, party_nm, party_region, user_id, created_at
-    FROM tb_party;
+<select id="getAllDataForFemale" resultType="com.smhrd.model.PartyVO">
+    SELECT * 
+    FROM tb_party p
+    JOIN tb_user u ON p.user_id = u.user_id
+    WHERE u.user_gender = 'F';
 </select>
 
 </mapper>

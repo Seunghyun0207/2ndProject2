@@ -93,7 +93,6 @@ public class UserVO {
         this.userGender = userGender;
     }
 
-
     public Date getUserAge() {
         return userAge;
     }

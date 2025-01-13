@@ -13,23 +13,13 @@ public class UserDAO {
     
     // 회원가입
     public int insertUser(UserVO user) {
-        SqlSession session = sqlSessionFactory.openSession();
+        SqlSession session = sqlSessionFactory.openSession(true);
         int cnt = 0;
-
         try {
             cnt = session.insert("com.smhrd.db.Mapper.insertUser", user);
-            if (cnt > 0) {
-                session.commit();
-            } else {
-                session.rollback();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            session.rollback();
         } finally {
             session.close();
         }
-
         return cnt;
     }
 

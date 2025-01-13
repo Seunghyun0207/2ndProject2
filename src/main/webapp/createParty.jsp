@@ -8,13 +8,25 @@
     <link rel="stylesheet" href="css/createParty.css">
 </head>
 <body>
-    <!-- 헤더 -->
-    <header>
-        <nav>
-            <button onclick="location.href='myPage.jsp'">마이페이지</button>
-            <button onclick="location.href='logoutProcess'">로그아웃</button>
-        </nav>
-    </header>
+  <!-- about -->
+    <div class="about">
+        <a class="bg_links social portfolio" href="./myPage.jsp">
+            <span class="icon"></span>
+        </a>
+       
+        <a class="bg_links social linkedin" href="./login.jsp">
+            <span class="icon"></span>
+        </a>
+        <a class="bg_links logo"></a>
+    </div>
+    
+    <div class="home-button-container">
+		        <a href="http://localhost:8081/2ndProject/main.jsp" class="home-button">Home</a>
+		    </div>
+		    <div id="app" class="wrapper" v-cloak v-bind:class="{'is-previous': isPreviousSlide, 'first-load': isFirstLoad}">
+		        <!-- 나머지 코드 -->
+		    </div>
+    
 
     <div class="create-meeting-container">
         <h1>모임방 생성</h1>

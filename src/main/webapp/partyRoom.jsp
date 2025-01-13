@@ -7,7 +7,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>유동회관 모임</title>
+    <title>청바지</title>
     <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/partyRoom.css">
     <style>
@@ -53,7 +53,7 @@
 </head>
 <body>
     <div id="app" class="wrapper">
-        <h1 class="site-name">유동회관모임</h1>
+        <h1 class="site-name">청바지</h1>
         <div class="about">
             <a class="bg_links social portfolio" href="<%= request.getContextPath() %>/myPage.jsp">
                 <span class="icon"></span>
@@ -63,6 +63,13 @@
             </a>
             <a class="bg_links logo"></a>
         </div>
+
+			<div class="home-button-container">
+		        <a href="http://localhost:8081/2ndProject/main.jsp" class="home-button">Home</a>
+		    </div>
+		    <div id="app" class="wrapper" v-cloak v-bind:class="{'is-previous': isPreviousSlide, 'first-load': isFirstLoad}">
+		        <!-- 나머지 코드 -->
+		    </div>
 
         <section id="wrapper">
             <div class="content">
@@ -74,95 +81,138 @@
                 </div>
 
                 <div class="wrapper_tabcontent">
-                   <div id="Meeting1" class="tabcontent active">
-    <section>
-        <img src="<%= request.getContextPath() %>/images/7.jpg" alt="Meeting">
-    </section>
-    <section class="meeting-introduction">
-        <h2>모임 소개</h2>
-        <p>${party.partyInfo}</p>
-    </section>
-    <section class="meeting-notices">
-        <h2>모임 공지사항</h2>
-        <p>${party.partyNotice}</p>
-    </section>
-
-    <!-- 가입된 멤버 목록 추가 -->
-    <section class="member-list">
-        <h2>가입된 멤버 목록</h2>
-        <table border="1">
-            <tr>
-                <th>아이디</th>
-                <th>이름</th>
-                <th>소개</th>
-            </tr>
-            <c:forEach var="member" items="${members}">
-                <tr>
-                    <td>${member.userId}</td>
-                    <td>${member.userName}</td>
-                    <td>${member.intro != null ? member.intro : "소개 없음"}</td>
-                </tr>
-            </c:forEach>
-        </table>
-        <c:if test="${not empty message}">
-            <div style="color: green; font-weight: bold;">
-                ${message}
-            </div>
-        </c:if>
-    </section>
-
-    <% 
-        PartyVO party = (PartyVO) request.getAttribute("party");
-        UserVO user = (UserVO) session.getAttribute("user");
-    %>
-    <% if (party != null && user != null && user.getUserId().equals(party.getUserId())) { %>
-    <section class="admin-section" id="adminSection">
-        <a href="editParty.jsp?partyIdx=<%= party.getPartyIdx() %>">
-            <button type="button" id="editButton">수정하기</button>
-        </a>
-        <form action="viewMembers" method="get">
-            <input type="hidden" name="partyIdx" value="<%= party.getPartyIdx() %>">
-            <button type="submit">회원 정보 보기</button>
-        </form>
-    </section>
-    <% } %>
-</div>
+                    <div id="Meeting1" class="tabcontent active">
+                        <section>
+                            <img src="<%= request.getContextPath() %>/images/7.jpg" alt="Meeting">
+                        </section>
+                        <section class="meeting-introduction">
+                            <h2>모임 소개</h2>
+                            <p>${party.partyInfo}</p>
+                        </section>
+                        <section class="meeting-notices">
+                            <h2>모임 공지사항</h2>
+                            <p>${party.partyNotice}</p>
+                        </section>
+                        <% 
+                            PartyVO party = (PartyVO) request.getAttribute("party");
+                            UserVO user = (UserVO) session.getAttribute("user");
+                        %>
+                        <% if (party != null && user != null && user.getUserId().equals(party.getUserId())) { %>
+                        <section class="admin-section" id="adminSection">
+                            <a href="editParty.jsp?partyIdx=<%= party.getPartyIdx() %>">
+                                <button type="button" id="editButton">수정하기</button>
+                            </a>
+                            <form action="viewMembers" method="get">
+                                <input type="hidden" name="partyIdx" value="<%= party.getPartyIdx() %>">
+                                <button type="submit">회원 정보 보기</button>
+                            </form>
+                        </section>
+                        <% } %>
+                    </div>
 
                     <div id="Board1" class="tabcontent">
-                        <div class="feed-item">
-                            <div class="feed-header">
-                                <div class="user-info">
-                                    <img src="<%= request.getContextPath() %>/images/11.jpg" alt="User photo" class="user-photo">
-                                    <span class="user-name">sunggwon</span>
-                                </div>
-                                <span class="feed-date">2025-01-08</span>
-                            </div>
-                            <div class="feed-content">
-                                <h3>게시글 제목</h3>
-                                <p>✨성권이의 블로그✨</p>
-                                <img src="<%= request.getContextPath() %>/images/10.jpg" alt="Post image" class="feed-image">
-                            </div>
-                            <div class="feed-actions">
-                                <button onclick="likePost(1)">좋아요❤️ 0</button>
-                                <button onclick="sharePost(1)">공유하기</button>
-                                <button onclick="editPost(1)">수정하기</button>
-                            </div>
-                            <div class="comments-section">
-                                <div class="comment-input-container">
-                                    <input type="text" class="comment-input" placeholder="댓글을 남겨주세요..." id="commentInput1">
-                                    <button class="comment-submit" onclick="submitComment(1)">댓글 달기</button>
-                                </div>
-                                <div class="comments-list" id="commentsList1">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+					<div class="feed-header">
+						<div class="user-info">
+							<img src="./images/11.png" alt="User photo" class="user-photo">
+							<span class="user-name">바당아이</span>
+						</div>
+						<span class="feed-date">2025-01-07</span>
+					</div>
+					<div class="feed-content">
+						<img src="./images/1.png" alt="Post image" class="feed-image">
+						<p>석모도.<br>
+						우연히 찾은 외포항.<br>
+						햇빛과 물때가 선물한 활홀한 장관....
+						</p>
+					</div>
+					<div class="feed-actions">
+						<button class="like-button" onclick="toggleLike()">좋아요❤️</button>
+						<button class="share-button" onclick="sharePost()">공유하기</button>
+					</div>
+					<div class="comments-section">
+						<div class="comment-input-container">
+							<input type="text" class="comment-input"
+								placeholder="댓글을 남겨주세요..." id="commentInput">
+							<button class="comment-submit" onclick="submitComment()">댓글
+								달기</button>
+						</div>
+						<div class="comments-list" id="commentsList">
+							<!-- 댓글이 여기에 표시됩니다 -->
+						</div>
+					</div>
+					<br> <br> <br>
+					<div class="feed-header">
+						<div class="user-info">
+							<img src="./images/22.png" alt="User photo" class="user-photo">
+							<span class="user-name">r로하</span>
+						</div>
+						<span class="feed-date">2025-01-07</span>
+					</div>
+					<div class="feed-content">
+						<img src="./images/2.png" alt="Post image" class="feed-image">
+						<p>울집 제일 어른인 나리씨~^^<br>
+						이 아이에게 배우고 싶은것이 있다.<br>
+						성격이 짱임~~｡♥‿♥｡~~~
+						</p>
+					</div>
+					<div class="feed-actions">
+						<button class="like-button">좋아요❤️</button>
+						<button class="share-button">공유하기</button>
+					</div>
+					<div class="comments-section">
+						<div class="comment-input-container">
+							<input type="text" class="comment-input"
+								placeholder="댓글을 남겨주세요..." id="commentInput">
+							<button class="comment-submit" onclick="submitComment()">댓글
+								달기</button>
+						</div>
+						<div class="comments-list" id="commentsList">
+							<!-- 댓글이 여기에 표시됩니다 -->
+						</div>
+					</div>
+					<br> <br> <br>
+					<div class="feed-header">
+						<div class="user-info">
+							<img src="./images/33.png" alt="User photo" class="user-photo">
+							<span class="user-name">api</span>
+						</div>
+						<span class="feed-date">2025-01-07</span>
+					</div>
+					<div class="feed-content">				
+						<img src="./images/3.png" alt="Post image" class="feed-image">
+						<p>.....</p>
+					</div>
+					<div class="feed-actions">
+						<button class="like-button">좋아요❤️</button>
+						<button class="share-button">공유하기</button>
+					</div>
+					<div class="comments-section">
+						<div class="comment-input-container">
+							<input type="text" class="comment-input"
+								placeholder="댓글을 남겨주세요..." id="commentInput">
+							<button class="comment-submit" onclick="submitComment()">댓글
+								달기</button>
+						</div>
+						<div class="comments-list" id="commentsList">
+							<!-- 댓글이 여기에 표시됩니다 -->
+						</div>
+					</div>
+					
+				</div>
+                    <div class="event1-board">
+					  <!-- 각 이미지 카드 -->
+					  <div class="event-image-wrapper">
+					    <img src="./images/poto1.png" alt="Event Image 1" class="event-image">
+					  </div>
+					  <div class="event-image-wrapper">
+					    <img src="./images/poto2.png" alt="Event Image 2" class="event-image">
+					  </div>
+					  <div class="event-image-wrapper">
+					    <img src="./images/poto3.png" alt="Event Image 3" class="event-image">
+					  </div>
+					  <!-- ... 나머지 이미지들 ... -->
+					</div>
 
-                    <div id="Event1" class="tabcontent">
-                        <div class="post-header">
-                            <img class="profile-pic" src="<%= request.getContextPath() %>/images/7.jpg" alt="Profile">
-                        </div>
-                    </div>
 
                     <div id="Notice1" class="tabcontent">
                         <div id="mapContent"></div>

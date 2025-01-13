@@ -1,122 +1,153 @@
 
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i|IBM+Plex+Sans+Condensed:400,400i|IBM+Plex+Sans:100,100i,400,400i,700,700i|IBM+Plex+Serif:400,400i");
-.about { /* 섹션 (소셜 아이콘 및 로고) */
+/* .about 클래스: 화면 오른쪽 아래에 고정된 버튼 스타일 */
+.home-button-container {
+    position: absolute; /* 절대 위치 설정 */
+    top: 20px;          /* 상단에서 20px 만큼 떨어지게 설정 */
+    right: 20px;        /* 우측에서 20px 만큼 떨어지게 설정 */
+    z-index: 1000;      /* 다른 요소보다 위에 보이도록 설정 */
+}
+
+/* Home 버튼의 스타일 */
+.home-button {
+    display: inline-flex; /* 텍스트와 아이콘을 가로로 배치 */
+    align-items: center;  /* 세로로 중앙 정렬 */
+    justify-content: center; /* 가로로 중앙 정렬 */
+    padding: 12px 25px; /* 버튼 안의 여백 설정 */
+    background-color: rgb(255, 255, 255); /* 버튼 배경색 (녹색 계열) */
+    color: rgb(0, 128, 255);         /* 텍스트 색은 흰색 */
+    font-size: 18px;      /* 폰트 크기 */
+    font-weight: bold;    /* 폰트 두께 설정 */
+    border-radius: 30px;  /* 버튼을 둥글게 만들기 */
+    text-decoration: none; /* 링크의 밑줄 제거 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 버튼에 그림자 추가 */
+    transition: all 0.3s ease; /* 모든 변화에 0.3초의 부드러운 전환 추가 */
+}
+
+/* Hover 효과: 마우스를 올리면 버튼 색상과 그림자가 바뀌도록 */
+.home-button:hover {
+    background-color: rgb(255, 255, 255); /* 마우스 오버 시 배경색 약간 진하게 */
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2); /* 그림자 크기 증가 */
+}
+
+/* Focus 효과: 키보드로 선택했을 때도 스타일을 적용 */
+.home-button:focus {
+    outline: none; /* 외곽선 제거 */
+    box-shadow: 0px 0px 5px 2px rgba(72, 133, 237, 0.5); /* 파란색 테두리 효과 */
+}
+.about {
   position: fixed; /* 위치 고정: 화면 오른쪽 아래에 고정 */
   z-index: 10;
-  bottom: 10px;
-  right: 10px;
-  width: 40px;
-  height: 40px;
+  bottom: 20px; /* 아래쪽 여백 증가 */
+  right: 20px; /* 오른쪽 여백 증가 */
+  width: 60px; /* 버튼의 너비 */
+  height: 60px; /* 버튼의 높이 */
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  transition: all 0.2s ease;
+  justify-content: flex-end; /* 아이템을 오른쪽 끝에 정렬 */
+  align-items: flex-end; /* 아이템을 아래쪽 끝에 정렬 */
+  transition: all 0.2s ease; /* 모든 속성에 애니메이션 효과 추가 */
 }
+
+/* .about 내부 배경 링크 스타일 */
 .about .bg_links {
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
+  width: 60px; /* 배경 링크의 너비 */
+  height: 60px; /* 배경 링크의 높이 */
+  border-radius: 100%; /* 원형으로 만듦 */
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 100%;
-  backdrop-filter: blur(5px);
+  justify-content: center; /* 중앙 정렬 */
+  align-items: center; /* 중앙 정렬 */
+  background-color: rgba(255, 255, 255, 0.2); /* 배경색 설정 */
+  backdrop-filter: blur(10px); /* 배경에 블러 효과 적용 */
   position: absolute;
 }
-.about .logo { /* .logo : 로고 이미지 & 투명도 조절 */
-  width: 40px;
-  height: 40px;
-  z-index: 9;
-  background-image: url(https://rafaelalucas91.github.io/assets/codepen/logo_white.svg);
-  background-size: 50%;
-  background-repeat: no-repeat;
-  background-position: 10px 7px;
-  opacity: 0.9;
-  transition: all 1s 0.2s ease;
+
+/* .about 로고 스타일 */
+.about .logo {
+  width: 60px; /* 로고 크기 */
+  height: 60px; /* 로고 크기 */
+  z-index: 9; /* z-index 조정 */
+  background-size: 100%; /* 배경 이미지 크기 조정 */
+  background-image: src("../images/mypageicon.png");
+  transition: all 1s 0.2s ease; /* 애니메이션 설정 */
   bottom: 0;
   right: 0;
 }
-.about .social { /* .social: 아이콘 애니메이션 호버 시 배경색 변경 */
-  opacity: 0;
-  right: 0;
-  bottom: 0;
-}
+
+/* 소셜 아이콘 스타일 */
 .about .social .icon {
-  width: 100%;
-  height: 100%;
-  background-size: 20px;
+  width: 100%; /* 아이콘의 너비 */
+  height: 100%; /* 아이콘의 높이 */
+  background-size: 100px; /* 아이콘 크기 확대 */
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center; /* 아이콘 중앙 정렬 */
   background-color: transparent;
   display: flex;
-  transition: all 0.2s ease, background-color 0.4s ease;
-  opacity: 0;
-  border-radius: 100%;
+  transition: all 0.2s ease, background-color 0.4s ease; /* 애니메이션 설정 */
+  opacity: 0; /* 기본 상태에서 아이콘은 보이지 않게 설정 */
+  border-radius: 100%; /* 원형 모양 */
 }
-.about .social.portfolio {
-  transition: all 0.8s ease;
-}
-.about .social.portfolio .icon {
-  background-image: url(https://rafaelalucas91.github.io/assets/codepen/link.svg);
-}
-.about .social.dribbble {
-  transition: all 0.3s ease;
-}
-.about .social.dribbble .icon {
-  background-image: url(https://rafaelalucas91.github.io/assets/codepen/dribbble.svg);
-}
-.about .social.linkedin {
-  transition: all 0.8s ease;
-}
-.about .social.linkedin .icon {
-  background-image: url(https://rafaelalucas91.github.io/assets/codepen/linkedin.svg);
-}
+
+/* .about:hover 상태: hover 시 크기와 애니메이션 효과 추가 */
 .about:hover {
-  width: 105px;
-  height: 105px;
-  transition: all 0.6s cubic-bezier(0.64, 0.01, 0.07, 1.65);
+  width: 120px; /* hover 시 너비 확대 */
+  height: 120px; /* hover 시 높이 확대 */
+  transition: all 0.6s cubic-bezier(0.64, 0.01, 0.07, 1.65); /* hover 애니메이션 */
 }
+
+/* .about:hover 상태에서 로고의 투명도 변경 */
 .about:hover .logo {
-  opacity: 1;
+  opacity: 1; /* 로고가 보이도록 설정 */
   transition: all 0.6s ease;
 }
+
+/* .about:hover 상태에서 소셜 아이콘의 투명도 변경 */
 .about:hover .social {
-  opacity: 1;
+  opacity: 1; /* 소셜 아이콘이 보이도록 설정 */
 }
+
+/* 소셜 아이콘 hover 상태에서의 애니메이션 */
 .about:hover .social .icon {
-  opacity: 0.9;
+  opacity: 0.9; /* 아이콘의 투명도 조정 */
 }
+
+/* 소셜 아이콘 hover 시 크기 확대 */
 .about:hover .social:hover {
-  background-size: 28px;
+  background-size: 35px; /* 아이콘 크기 확대 */
 }
+
+/* 소셜 아이콘 hover 상태에서 배경 크기 조정 */
 .about:hover .social:hover .icon {
-  background-size: 65%;
-  opacity: 1;
+  background-size: 70%; /* 배경 크기 확대 */
 }
+
+/* .about:hover 상태에서 포트폴리오 아이콘 위치 변경 */
 .about:hover .social.portfolio {
   right: 0;
-  bottom: calc(100% - 40px);
+  bottom: calc(100% - 60px); /* 위치 조정 */
   transition: all 0.3s 0s cubic-bezier(0.64, 0.01, 0.07, 1.65);
 }
-.about:hover .social.portfolio .icon:hover {
-  background-color: #698fb7;
-}
-.about:hover .social.dribbble {
-  bottom: 45%;
-  right: 45%;
-  transition: all 0.3s 0.15s cubic-bezier(0.64, 0.01, 0.07, 1.65);
-}
-.about:hover .social.dribbble .icon:hover {
-  background-color: #ea4c89;
-}
+
+/* .about:hover 상태에서 LinkedIn 아이콘 위치 변경 */
 .about:hover .social.linkedin {
   bottom: 0;
-  right: calc(100% - 40px);
+  right: calc(100% - 60px); /* 위치 조정 */
   transition: all 0.3s 0.25s cubic-bezier(0.64, 0.01, 0.07, 1.65);
 }
-.about:hover .social.linkedin .icon:hover {
-  background-color: #0077b5;
+
+/* 포트폴리오 아이콘에 배경 이미지 추가 */
+.about .social.portfolio {
+  background-image: url('../images/mypageicon.png'); /* 배경 이미지 설정 */
+  background-size: cover; /* 이미지를 요소 크기에 맞게 조정 */
+  background-position: center; /* 이미지가 중앙에 오도록 설정 */
+  background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
+}
+
+/* LinkedIn 아이콘에 배경 이미지 추가 */
+.about .social.linkedin {
+  background-image: url('../images/logouticon.png'); /* 배경 이미지 설정 */
+  background-size: cover; /* 이미지를 요소 크기에 맞게 조정 */
+  background-position: center; /* 이미지가 중앙에 오도록 설정 */
+  background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
 }
 
 /* main 1*/
@@ -172,7 +203,6 @@ body {
 /* Tab Links */
 .tablinks {
   background: transparent;
-  background-image: linear-gradient(90deg, transparent 70%, rgba(255, 255, 255, 0.2) 100%);
   border: none;
   outline: none;
   cursor: pointer;
@@ -195,8 +225,7 @@ body {
   }
 }
 
-.tablinks:before { /* 카테고리 버튼 위 띠 색*/
-  background-image: linear-gradient(135deg, #7a7a7a 0%, hsl(124, 77%, 45%) 100%); 
+.tablinks:before { /* 카테고리 버튼 위 띠 색*/ 
   content: "";
   width: 100%;
   height: 0px;
@@ -247,7 +276,7 @@ body {
 .tablinks.active p,
 .tablinks.active:hover p {
   opacity: 1;
-  background: -webkit-linear-gradient(135deg, #39b141 0%, #fcfcfc 100%);
+  background: -webkit-linear-gradient(135deg, white 0%, white 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -421,7 +450,7 @@ body {
 /* ✅ 추가된 고정 배경 이미지 설정 */
 body::before {
   content: "";
-  background: url('images/1.png') no-repeat center center/cover;
+  background-color: rgb(0, 128, 255);
   background-attachment: fixed; /* 배경 이미지 고정 */
   position: fixed;
   top: 0;
@@ -846,33 +875,37 @@ h1 {
 
 /* 탭 버튼 기본 스타일 */
 /* 탭 버튼 기본 스타일 */
-.tablinks {
-  padding: 10px 20px; /* 버튼 내 여백 */
-  cursor: pointer; /* 마우스를 올렸을 때 커서 변경 */
-  font-size: 16px; /* 폰트 크기 설정 */
-  background-color: transparent; /* 배경색을 투명으로 설정 */
-  border: none; /* 경계선 없애기 */
+/* 전체 탭 컨테이너에서 그림자 제거 */
+#wrapper .content {
   box-shadow: none; /* 그림자 제거 */
-  transition: background-color 0.3s ease; /* 배경색 전환 효과 */
 }
 
-/* 마우스를 올렸을 때 배경색 변경 없애기 */
+.tablinks {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  color: black; /* 기본 글자색 */
+  border: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .tablinks:hover {
-  background-color: transparent; /* hover 시 배경색 변경 없음 */
-  text-shadow: none; /* hover 시 텍스트 그림자 제거 */
+  background-color: #ffffff; /* hover 시 배경색 유지 */
+  color: black; /* hover 시 글자색 유지 */
 }
 
-/* 클릭 시 글씨 그림자 추가 */
 .tablinks:active {
-  color: #ffffff; /* 글자색을 흰색으로 설정 (옵션) */
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* 글씨에 그림자 추가 */
+  background-color: rgb(230, 230, 230); /* 클릭 시 배경색 */
+  color: black; /* 클릭 시 글자색 유지 */
 }
 
-/* 활성화된 탭 버튼 강조 스타일 */
 .tablinks.active {
-  background-color: #4CAF50; /* 활성화된 버튼의 배경색 */
-  color: rgb(10, 0, 0); /* 활성화된 버튼의 글자색 */
+  background-color: white; /* 활성화된 버튼의 배경색 */
+  color: black; /* 활성화된 버튼의 글자색 */
 }
+
+
+
 
 
 /* ==============================
@@ -887,15 +920,14 @@ h1 {
 /* 검색 입력창 스타일 */
 .search-bar input {
   padding: 10px; /* 입력창 내부 여백 */
-  width: 80%; /* 입력창 너비 */
-  border: 1px solid #ccc; /* 경계선 색상 */
+  width: 80%; /* 입력창rgb(0, 128, 255)  border: 1px solid #ccc; /* 경계선 색상 */
   border-radius: 5px; /* 둥글게 처리 */
 }
 
 /* 검색 버튼 스타일 */
 .search-bar button {
   padding: 10px 20px; /* 버튼 내부 여백 */
-  background-color: #4CAF50; /* 버튼 배경색 */
+  background-color:rgb(0, 128, 255); /* 버튼 배경색 */
   color: white; /* 버튼 글자색 */
   border: none; /* 경계선 없애기 */
   border-radius: 5px; /* 둥글게 처리 */
@@ -904,7 +936,7 @@ h1 {
 
 /* 검색 버튼에 마우스를 올렸을 때 색상 변경 */
 .search-bar button:hover {
-  background-color: #45a049; /* 버튼 배경색 변경 */
+  background-color:rgb(0, 128, 255); /* 버튼 배경색 변경 */
 }
 
 /* ==============================
@@ -956,7 +988,7 @@ h1 {
 
 .feed-content {
   margin-top: 10px; /* 내용 상단 여백 설정 */
-  text-align: center; /* 내용 텍스트 중앙 정렬 */
+  text-align: left; /* 내용 텍스트 중앙 정렬 */
 }
 
 .feed-image {
@@ -975,7 +1007,7 @@ h1 {
 /* 좋아요, 공유 버튼 스타일 */
 .like-button, .share-button {
   padding: 10px; /* 버튼 내부 여백 */
-  background-color: #4CAF50; /* 버튼 배경색 */
+  background-color: rgb(0, 128, 255); /* 버튼 배경색 */
   color: white; /* 버튼 글자색 */
   border: none; /* 경계선 없앰 */
   border-radius: 5px; /* 버튼 모서리를 둥글게 처리 */
@@ -983,7 +1015,7 @@ h1 {
 }
 
 .like-button:hover, .share-button:hover {
-  background-color: #45a049; /* 버튼에 마우스를 올렸을 때 배경색을 변경 */
+  background-color: rgb(0, 128, 255); /* 버튼에 마우스를 올렸을 때 배경색을 변경 */
 }
 
 /* 댓글 섹션 */
@@ -1009,7 +1041,7 @@ h1 {
 }
 
 .comment-submit {
-  background-color: #4CAF50; /* 버튼 배경색 */
+  background-color: rgb(0, 128, 255); /* 버튼 배경색 */
   color: white; /* 버튼 글자색 */
   border: none; /* 경계선 없앰 */
   border-radius: 5px; /* 버튼 모서리를 둥글게 처리 */
@@ -1020,7 +1052,7 @@ h1 {
 }
 
 .comment-submit:hover {
-  background-color: #45a049; /* 버튼에 마우스를 올렸을 때 배경색을 변경 */
+  background-color: rgb(0, 128, 255); /* 버튼에 마우스를 올렸을 때 배경색을 변경 */
 }
 
 .comments-list {
@@ -1152,7 +1184,7 @@ h1 {
   margin-top: 20px; /* 위쪽 여백 */
 }
 #create-meeting-btn {
-  background-color: #4CAF50;
+  background-color: rgb(0, 128, 255);
   color: white;
   padding: 10px 20px;
   border: none;
@@ -1163,17 +1195,6 @@ h1 {
 }
 
 #create-meeting-btn:hover {
-  background-color: #45a049;
-}
-#myPartyList p {
-    margin: 0;
-    padding: 5px 0;
-    font-size: 14px;
-    color: #555;
+  background-color: rgb(0, 128, 255);
 }
 
-#myPartyList div {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}

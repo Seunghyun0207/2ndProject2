@@ -15,7 +15,7 @@ if (user == null) {
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>유동회관</title>
+<title>청바지</title>
 <link
 	href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap"
 	rel="stylesheet">
@@ -52,81 +52,78 @@ h1 {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
         // 모임 찾기 버튼 클릭 시 AJAX 호출
-   function findParty() {
-    // 초기 상태: 로딩 중 메시지 표시
-    $('#partyList').html('<p>데이터를 불러오는 중입니다...</p>');
+    function findParty() {
+        $.ajax({
+            url: '<%=request.getContextPath()%>/findPartyProcess',
+            method: 'GET',
+            success: function(response) {
+                var partyList = response;
 
-    $.ajax({
-        url: '<%=request.getContextPath()%>/findPartyProcess',
-        method: 'GET',
-        success: function(response) {
-            var partyList = response;
+                console.log("응답 데이터:", partyList);
 
-            console.log("응답 데이터:", partyList);
+                var partyHtml = '';
 
-            var partyHtml = '';
-
-            if (partyList.length === 0) {
-                partyHtml = '<p>등록된 모임이 없습니다.</p>';
-            } else {
-                for (var i = 0; i < partyList.length; i++) {
-                    var party = partyList[i];
-                    // party-item 전체를 클릭 가능하도록 설정
-                    partyHtml += '<div class="party-item" onclick="redirectToJoinParty(\'' + party.partyIdx + '\')">';
-                    partyHtml += '<p><strong>모임 이름: </strong>' + party.partyNm + '</p>';
-                    partyHtml += '<p><strong>지역: </strong>' + party.partyRegion + '</p>';
-                    partyHtml += '<p><strong>작성자: </strong>' + party.userId + '</p>';
-                    partyHtml += '<p><strong>생성일: </strong>' + party.createdAt + '</p>';
-                    partyHtml += '</div>';
+                if (partyList.length === 0) {
+                    partyHtml = '<p>등록된 모임이 없습니다.</p>';
+                } else {
+                    for (var i = 0; i < partyList.length; i++) {
+                        var party = partyList[i];
+                        // party-item 전체를 클릭 가능하도록 설정
+                        partyHtml += '<div class="party-item" onclick="redirectToJoinParty(\'' + party.partyIdx + '\')">';
+                        partyHtml += '<p><strong>모임 이름: </strong>' + party.partyNm + '</p>';
+                        partyHtml += '<p><strong>지역: </strong>' + party.partyRegion + '</p>';
+                        partyHtml += '<p><strong>작성자: </strong>' + party.userId + '</p>';
+                        partyHtml += '<p><strong>생성일: </strong>' + party.createdAt + '</p>';
+                        partyHtml += '</div>';
+                    }
                 }
-            }
 
-            // 데이터를 로드한 후 HTML 업데이트
-            $('#partyList').html(partyHtml);
-        },
-        error: function(xhr, status, error) {
-            console.log("AJAX 오류:", error);
-            $('#partyList').html('<p>데이터를 불러오는 중 오류가 발생했습니다.</p>');
-        }
-    });
-}
+                $('#partyList').html(partyHtml);
+            },
+            error: function(xhr, status, error) {
+                console.log("AJAX 오류:", error);
+                alert('모임 찾기 실패');
+            }
+        });
+    }
 
     // 가입 페이지로 이동하는 함수
+    function redirectToJoinParty(partyIdx) {
+        window.location.href = '<%=request.getContextPath()%>/partyDetailProcess?partyIdx=' + partyIdx;
+    }
+
+    // 나의 모임 버튼 클릭 시 데이터 로드
     function loadMyParties() {
-    // 초기 상태: 로딩 중 메시지 표시
-    $('#myPartyList').html('<p>데이터를 불러오는 중입니다...</p>');
+        $.ajax({
+            url: '<%=request.getContextPath()%>/myParties',
+            method: 'GET',
+            success: function(response) {
+                var myParties = response;
 
-    $.ajax({
-        url: '<%=request.getContextPath()%>/myParties',
-        method: 'GET',
-        success: function(response) {
-            var myParties = response;
+                var myPartyHtml = '';
 
-            var myPartyHtml = '';
-
-            if (myParties.length === 0) {
-                myPartyHtml = '<p>참여한 모임이 없습니다.</p>';
-            } else {
-                for (var i = 0; i < myParties.length; i++) {
-                    var party = myParties[i];
-                    myPartyHtml += '<div class="party-item" onclick="redirectToPartyRoom(\'' + party.partyIdx + '\')">';
-                    myPartyHtml += '<p><strong>모임 이름: </strong>' + party.partyNm + '</p>';
-                    myPartyHtml += '<p><strong>지역: </strong>' + party.partyRegion + '</p>';
-                    myPartyHtml += '<p><strong>작성자: </strong>' + party.userId + '</p>';
-                    myPartyHtml += '<p><strong>생성일: </strong>' + party.createdAt + '</p>';
-                    myPartyHtml += '</div>';
+                if (myParties.length === 0) {
+                    myPartyHtml = '<p>참여한 모임이 없습니다.</p>';
+                } else {
+                    for (var i = 0; i < myParties.length; i++) {
+                        var party = myParties[i];
+                        myPartyHtml += '<div class="party-item" onclick="redirectToPartyRoom(\'' + party.partyIdx + '\')">';
+                        myPartyHtml += '<p><strong>모임 이름: </strong>' + party.partyNm + '</p>';
+                        myPartyHtml += '<p><strong>지역: </strong>' + party.partyRegion + '</p>';
+                        myPartyHtml += '<p><strong>작성자: </strong>' + party.userId + '</p>';
+                        myPartyHtml += '<p><strong>생성일: </strong>' + party.createdAt + '</p>';
+                        myPartyHtml += '</div>';
+                    }
                 }
-            }
 
-            // 데이터를 로드한 후 HTML 업데이트
-            $('#myPartyList').html(myPartyHtml);
-        },
-        error: function(xhr, status, error) {
-            console.log("AJAX 오류:", error);
-            $('#myPartyList').html('<p>데이터를 불러오는 중 오류가 발생했습니다.</p>');
-        }
-    });
-}
+                $('#myPartyList').html(myPartyHtml);
+            },
+            error: function(xhr, status, error) {
+                console.log("AJAX 오류:", error);
+                alert('나의 모임 조회 실패');
+            }
+        });
+    }
 
     // partyRoom으로 리다이렉트하는 함수 추가
     function redirectToPartyRoom(partyIdx) {
@@ -148,7 +145,7 @@ h1 {
         } else {
             alert('잘못된 모임 ID입니다.');
         }
-    }
+    } 
     </script>
 
 <!-- "나의 모임" 탭 콘텐츠 -->
@@ -161,35 +158,6 @@ h1 {
 
 	<!-- 나의 모임 리스트 출력 영역 -->
 	<div id="myPartyList">
-	 <c:choose>
-        <c:when test="${not empty filteredData}">
-            <!-- 데이터가 있을 때 -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>모임 이름</th>
-                        <th>지역</th>
-                        <th>작성자</th>
-                        <th>생성일</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="party" items="${filteredData}">
-                        <tr>
-                            <td>${party.partyNm}</td>
-                            <td>${party.partyRegion}</td>
-                            <td>${party.userId}</td>
-                            <td>${party.createdAt}</td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </c:when>
-        <c:otherwise>
-            <!-- 데이터가 없을 때 -->
-            <p>남성 사용자는 데이터를 볼 수 없습니다.</p>
-        </c:otherwise>
-    </c:choose>
 		<!-- AJAX로 데이터가 로드되면 여기에 표시됩니다 -->
 	</div>
 </div>
@@ -200,42 +168,46 @@ h1 {
 <body>
 	<div id="app" class="wrapper" v-cloak
 		v-bind:class="{'is-previous': isPreviousSlide, 'first-load': isFirstLoad}">
-		<h1 class="site-name">온도차이</h1>
+		<h1 class="site-name">청바지</h1>
 
-		<!-- about -->
-		<div class="about">
-			<a class="bg_links social portfolio"
-				href="https://www.rafaelalucas.com" target="_blank"> <span
-				class="icon"></span>
-			</a> <a class="bg_links social dribbble"
-				href="https://dribbble.com/rafaelalucas" target="_blank"> <span
-				class="icon"></span>
-			</a> <a class="bg_links social linkedin"
-				href="https://www.linkedin.com/in/rafaelalucas/" target="_blank">
-				<span class="icon"></span>
-			</a> <a class="bg_links logo"></a>
-		</div>
-
+	<!-- about -->
+    <div class="about">
+        <a class="bg_links social portfolio" href="./myPage.jsp">
+            <span class="icon"></span>
+        </a>
+       
+        <a class="bg_links social linkedin" href="./login.jsp">
+            <span class="icon"></span>
+        </a>
+        <a class="bg_links logo"></a>
+    </div>
+	
+		<div class="home-button-container">
+		        <a href="http://localhost:8081/2ndProject/main.jsp" class="home-button">Home</a>
+		    </div>
+		    <div id="app" class="wrapper" v-cloak v-bind:class="{'is-previous': isPreviousSlide, 'first-load': isFirstLoad}">
+		        <!-- 나머지 코드 -->
+		    </div>
 
 		<section id="wrapper">
 			<div class="content">
 				<!-- Tab links -->
 				<div class="tabs">
-					<button class="tablinks" data-country="FindMeeting"
+					<button class="tablinks active" data-country="FindMeeting"
 						onclick="findParty()">
-						<p data-title="FindMeeting">모임 찾기</p>
+						모임 찾기
 					</button>
 					<button class="tablinks" data-country="Meeting">
-						<p data-title="Meeting">나의모임</p>
+						나의모임
 					</button>
-					<button class="tablinks active" data-country="Board">
-						<p data-title="Board">피드</p>
+					<button class="tablinks" data-country="Board">
+						피드
 					</button>
 					<button class="tablinks" data-country="Event">
-						<p data-title="Event">이벤트</p>
+						이벤트
 					</button>
 					<button class="tablinks" data-country="Notice">
-						<p data-title="Notice">공지사항</p>
+						공지사항
 					</button>
 
 				</div>
@@ -260,40 +232,9 @@ h1 {
 					<!-- 모임 불러오기 -->
 					<div class="meeting-item">
 						<div class="photo">
-							<img src="./images/1.png" alt="모임 사진 1">
+							<img src="./images/m.png" alt="모임 사진 1">
 						</div>
-						<div id="partyList" class="details">
-						<c:choose>
-    
-    <c:when test="${not empty filteredData}">
-        <table>
-            <thead>
-                <tr>
-                    <th>모임 이름</th>
-                    <th>지역</th>
-                    <th>작성자</th>
-                    <th>생성일</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="party" items="${filteredData}">
-                    <tr>
-                        <td>${party.partyNm}</td>
-                        <td>${party.partyRegion}</td>
-                        <td>${party.userId}</td>
-                        <td>${party.createdAt}</td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
-    </c:when>
-
-   
-    <c:otherwise>
-        <p>남성 사용자는 데이터를 볼 수 없습니다.</p>
-    </c:otherwise>
-</c:choose>
-						</div>
+						<div id="partyList" class="details"></div>
 					</div>
 				</div>
 
@@ -305,29 +246,22 @@ h1 {
 						<button id="search-btn">검색</button>
 					</div>
 
-					<!-- 피드 모임 항목 -->
-					<div class="meeting-item">
-						<div class="photo">
-							<img src="./images/9.jpg" alt="모임 사진 1">
-						</div>
-						<div class="details">
-							<p>제목</p>
-						</div>
-					</div>
-
 				</div>
 
 				<div id="Board" class="tabcontent">
 					<div class="feed-header">
 						<div class="user-info">
-							<img src="user-photo.jpg" alt="User photo" class="user-photo">
-							<span class="user-name">John Doe</span>
+							<img src="./images/11.png" alt="User photo" class="user-photo">
+							<span class="user-name">바당아이</span>
 						</div>
 						<span class="feed-date">2025-01-07</span>
 					</div>
 					<div class="feed-content">
-						<p>This is a post content.</p>
-						<img src="post-image.jpg" alt="Post image" class="feed-image">
+						<img src="./images/1.png" alt="Post image" class="feed-image">
+						<p>석모도.<br>
+						우연히 찾은 외포항.<br>
+						햇빛과 물때가 선물한 활홀한 장관....
+						</p>
 					</div>
 					<div class="feed-actions">
 						<button class="like-button" onclick="toggleLike()">좋아요❤️</button>
@@ -347,14 +281,17 @@ h1 {
 					<br> <br> <br>
 					<div class="feed-header">
 						<div class="user-info">
-							<img src="user-photo.jpg" alt="User photo" class="user-photo">
-							<span class="user-name">John Doe</span>
+							<img src="./images/22.png" alt="User photo" class="user-photo">
+							<span class="user-name">r로하</span>
 						</div>
 						<span class="feed-date">2025-01-07</span>
 					</div>
 					<div class="feed-content">
-						<p>This is a post content.</p>
-						<img src="post-image.jpg" alt="Post image" class="feed-image">
+						<img src="./images/2.png" alt="Post image" class="feed-image">
+						<p>울집 제일 어른인 나리씨~^^<br>
+						이 아이에게 배우고 싶은것이 있다.<br>
+						성격이 짱임~~｡♥‿♥｡~~~
+						</p>
 					</div>
 					<div class="feed-actions">
 						<button class="like-button">좋아요❤️</button>
@@ -371,13 +308,41 @@ h1 {
 							<!-- 댓글이 여기에 표시됩니다 -->
 						</div>
 					</div>
+					<br> <br> <br>
+					<div class="feed-header">
+						<div class="user-info">
+							<img src="./images/33.png" alt="User photo" class="user-photo">
+							<span class="user-name">api</span>
+						</div>
+						<span class="feed-date">2025-01-07</span>
+					</div>
+					<div class="feed-content">				
+						<img src="./images/3.png" alt="Post image" class="feed-image">
+						<p>.....</p>
+					</div>
+					<div class="feed-actions">
+						<button class="like-button">좋아요❤️</button>
+						<button class="share-button">공유하기</button>
+					</div>
+					<div class="comments-section">
+						<div class="comment-input-container">
+							<input type="text" class="comment-input"
+								placeholder="댓글을 남겨주세요..." id="commentInput">
+							<button class="comment-submit" onclick="submitComment()">댓글
+								달기</button>
+						</div>
+						<div class="comments-list" id="commentsList">
+							<!-- 댓글이 여기에 표시됩니다 -->
+						</div>
+					</div>
+					
 				</div>
 
 				<div id="Event" class="tabcontent">
 					<div class="event-board">
 						<div class="event-item">
-							<h3 class="event-title">이벤트 제목</h3>
-							<p class="event-date">2025-01-07</p>
+							<h3 class="event-title"></h3>
+							<p class="event-date"></p>
 							<p class="event-location">이벤트 장소: 스마트인재개발원</p>
 							<p class="event-content">출석 열심히 하면 "하이오 커피" 쿠폰 제공.</p>
 						</div>
@@ -387,9 +352,12 @@ h1 {
 				<div id="Notice" class="tabcontent">
 					<div class="notice-board">
 						<div class="notice-item">
-							<h3 class="notice-title">공지사항 제목</h3>
-							<p class="notice-date">2025-01-07</p>
-							<p class="notice-content">업데이트 중입니다.</p>
+							<h3 class="notice-title"></h3>
+							<p class="notice-date"></p>
+							<p class="notice-content">
+									이쁜 말, 좋은 정보 공유하는 청바지 일원이 되어요 ^^
+									
+									</p>
 						</div>
 					</div>
 				</div>
@@ -402,26 +370,27 @@ h1 {
 var tabLinks = document.querySelectorAll(".tablinks");
 var tabContent = document.querySelectorAll(".tabcontent");
 
-tabLinks.forEach(function(el) {
-   el.addEventListener("click", openTabs);
+tabLinks.forEach(function (el) {
+  el.addEventListener("click", function () {
+    // 모든 탭 콘텐츠 숨김
+    tabContent.forEach(function (content) {
+      content.classList.remove("active");
+    });
+
+    // 모든 탭 버튼에서 active 클래스 제거
+    tabLinks.forEach(function (link) {
+      link.classList.remove("active");
+    });
+
+    // 현재 탭 콘텐츠 보이기
+    var targetContent = document.getElementById(el.dataset.country);
+    targetContent.classList.add("active");
+
+    // 현재 탭 버튼에 active 클래스 추가
+    el.classList.add("active");
+  });
 });
 
-function openTabs(el) {
-   var btnTarget = el.currentTarget;
-   var country = btnTarget.dataset.country;
-
-   tabContent.forEach(function(el) {
-      el.classList.remove("active");
-   });
-
-   tabLinks.forEach(function(el) {
-      el.classList.remove("active");
-   });
-
-   document.querySelector("#" + country).classList.add("active");
-   
-   btnTarget.classList.add("active");
-}
 
 // 📸 게시물 추가 기능
 document.getElementById('addPost').addEventListener('click', function () {

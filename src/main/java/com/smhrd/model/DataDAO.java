@@ -20,7 +20,9 @@ public class DataDAO {
         List<PartyVO> dataList = null;
 
         try {
-            dataList = session.selectList("com.smhrd.db.Mapper.getAllData");
+            // 여성 사용자 데이터만 가져오기
+            dataList = session.selectList("com.smhrd.db.Mapper.getAllDataForFemale");
+            System.out.println("가져온 데이터 크기: " + dataList.size());  // 데이터 크기 확인
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

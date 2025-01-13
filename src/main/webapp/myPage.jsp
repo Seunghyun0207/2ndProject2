@@ -7,7 +7,25 @@
     <link rel="stylesheet" href="css/myPage.css">
 </head>
 <body>
-
+<!-- about -->
+    <div class="about">
+        <a class="bg_links social portfolio" href="./myPage.jsp">
+            <span class="icon"></span>
+        </a>
+       
+        <a class="bg_links social linkedin" href="./login.jsp">
+            <span class="icon"></span>
+        </a>
+        <a class="bg_links logo"></a>
+    </div>
+    
+    <div class="home-button-container">
+		        <a href="http://localhost:8081/2ndProject/main.jsp" class="home-button">Home</a>
+		    </div>
+		    <div id="app" class="wrapper" v-cloak v-bind:class="{'is-previous': isPreviousSlide, 'first-load': isFirstLoad}">
+		        <!-- 나머지 코드 -->
+		    </div>
+    
 <div class="mypage-container">
     <h2>마이페이지</h2>
 
