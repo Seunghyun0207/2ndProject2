@@ -275,5 +275,28 @@
     JOIN tb_user u ON p.user_id = u.user_id
     WHERE u.user_gender = 'F';
 </select>
+ <!--  지역 공지 조회 -->
+	<select id="selectLocationPostById" parameterType="int"
+		resultType="com.smhrd.model.LocationVO">
+		SELECT * FROM tb_location_post WHERE l_post_idx =
+		#{l_post_idx};
+	</select>
+<select id="selectAllLocationPosts" resultType="com.smhrd.model.LocationVO"> SELECT * FROM tb_location_post ORDER BY created_at DESC; </select>
+<select id="selectLocationPostsByUserId" parameterType="string" resultType="com.smhrd.model.LocationVO"> SELECT * FROM tb_location_post WHERE user_id = #{userId} ORDER BY created_at DESC; </select>
+<select id="selectLocationPostsByUserAndParty" parameterType="map" resultType="com.smhrd.model.LocationVO"> SELECT l_post_idx, l_post_nm, l_post_content, latitude, longitude, user_id, party_idx, created_at FROM tb_location_post WHERE user_id = #{userId} AND party_idx = #{partyIdx} ORDER BY created_at DESC; </select>
+    <select id="getLocationById" parameterType="int" resultType="com.smhrd.model.LocationVO">
+        SELECT * FROM tb_location_post WHERE location_idx = #{locationIdx}
+    </select>
 
+    <insert id="insertLocationPost" parameterType="com.smhrd.model.LocationVO" useGeneratedKeys="true" keyProperty="l_post_idx">
+    INSERT INTO tb_location_post (
+        l_post_nm, l_post_content, l_post_like, latitude, longitude, user_id, party_idx
+    ) VALUES (
+        #{l_post_nm}, #{l_post_content}, #{l_post_like, jdbcType=INTEGER},#{latitude}, #{longitude}, #{user_id}, #{party_idx}
+    )
+</insert>
+    <select id="getLocationsByPartyIdx" parameterType="int" resultType="com.smhrd.model.LocationVO">
+    SELECT * FROM tb_location_post
+    WHERE party_idx = #{partyIdx}
+</select>
 </mapper>

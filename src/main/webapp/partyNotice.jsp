@@ -1,150 +1,110 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.smhrd.model.UserVO" %>
+<%
+		HttpSession session2 = request.getSession();
+		UserVO user = (UserVO) session2.getAttribute("user"); // session2로 변경
+		String partyIdx = (String) request.getAttribute("partyIdx");
+%>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>모임 공지</title>
-    <link rel="stylesheet" href="css/createParty.css">
-    <style>
-        h1 {
-            font-family: 'East Sea Dokdo', cursive;
-            color: white;
-            font-size: 60px;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        }
-        .post {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 20px;
-            background-color: #fff;
-        }
-        .post img {
-            max-width: 100%;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-        .post-actions {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 10px;
-        }
-        .post-actions button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            font-size: 14px;
-            transition: background-color 0.3s;
-        }
-        .post-actions button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>모임 공지 작성</title>
+    <link rel="stylesheet" href="css/partyNotice.css">
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=58a4a5cfbc781b2348261bdd16809813&libraries=services"></script>
 </head>
 <body>
-    <!-- 헤더 -->
     <header>
-        <nav>
-            <button onclick="location.href='myPage.jsp'">마이페이지</button>
-            <button onclick="location.href='logoutProcess'">로그아웃</button>
-        </nav>
+        <h1>모임 공지 작성</h1>
     </header>
 
-    <div class="create-meeting-container">
-        <h1>모임 공지</h1>
-        <main>
-            <form action="createPartyProcess" method="post" enctype="multipart/form-data" id="create-meeting-form">
-                <!-- 모임 공지 제목 -->
-                <div class="form-group">
-                    <label for="partyTitle">모임 날짜 & 시간</label>
-                    <input type="text" id="partyTitle" name="partyTitle" placeholder="모임 날짜와 시간을 입력하세요" required>
-                </div>
+    <main>
+        <form action="PartyNoticeProcess" method="post" id="create-notice-form">
+            <!-- 유저 ID와 파티 ID를 hidden 필드로 전달 -->
+            <input type="hidden" name="userId" value="<%= user != null ? user.getUserId() : "" %>">
+            <input type="hidden" name="partyIdx" value="<%= partyIdx != null ? partyIdx : "" %>">
+            <input type="hidden" name="latitude" id="latitudeInput">
+            <input type="hidden" name="longitude" id="longitudeInput">
 
-                <!-- 모임 공지 안내 -->
-                <div class="form-group">
-                    <label for="partyDescription">모임 안내</label>
-                    <textarea id="partyDescription" name="partyDescription" rows="5" placeholder="모임에 대한 안내사항을 입력하세요." required></textarea>
-                </div>
-
-                <!-- 모임 지역 -->
-                <div class="form-group">
-                    <label for="partyRegion">모임방 지역</label>
-                    <select id="partyRegion" name="partyRegion" required>
-                        <option value="" disabled selected>지역을 선택해주세요.</option>
-                        <option value="GG">경기도</option>
-                        <option value="GW">강원도</option>
-                        <option value="CB">충청북도</option>
-                        <option value="CN">충청남도</option>
-                        <option value="GB">경상북도</option>
-                        <option value="GN">경상남도</option>
-                        <option value="JB">전라북도</option>
-                        <option value="JN">전라남도</option>
-                        <option value="JJ">제주도</option>
-                    </select>
-                </div>
-
-                <!-- 모임 위치 섹션 -->
-                <div id="mapContent" style="margin-top: 20px;">
-                    <div id="map" style="width:100%; height:400px;"></div>
-                    <div id="location-info" style="padding: 10px; background-color: #f0f0f0; margin-top: 10px;">
-                        <p>위도: <span id="latitude">0</span></p>
-                        <p>경도: <span id="longitude">0</span></p>
-                        <p>주소: <span id="address">주소가 여기에 표시됩니다.</span></p>
-                    </div>
-                </div>
-
-                <!-- 모임 공지 생성 버튼 -->
-                <div class="form-group">
-                    <button type="submit" id="create-meeting-btn">모임 공지 생성</button>
-                </div>
-            </form>
+            <!-- 공지 제목 -->
             <div>
-                <button onclick="location.href='main.jsp'">뒤로 가기</button>
+                <label for="partyTitle">모임 제목:</label>
+                <input type="text" id="partyTitle" name="partyTitle" placeholder="공지 제목을 입력하세요" required>
             </div>
-        </main>
 
-        <script>
-            // 지도 초기화 함수
-            let currentMarker = null;
+            <!-- 공지 내용 -->
+            <div>
+                <label for="partyDescription">공지 내용:</label>
+                <textarea id="partyDescription" name="partyDescription" rows="5" placeholder="공지 내용을 입력하세요" required></textarea>
+            </div>
 
-            function initMap(lat = 37.5665, lng = 126.9780) {
-                var mapContainer = document.getElementById('map');
-                var mapOption = {
-                    center: new kakao.maps.LatLng(lat, lng),
-                    level: 3
-                };
-                var map = new kakao.maps.Map(mapContainer, mapOption);
-                var geocoder = new kakao.maps.services.Geocoder();
+            <!-- 지도와 위치 정보 -->
+            <div id="mapContainer">
+                <div id="map" style="width:100%; height:400px;"></div>
+                <div id="locationInfo" style="margin-top: 10px;">
+                    <p>선택한 위치:</p>
+                    <p>위도: <span id="latitudeDisplay">미선택</span></p>
+                    <p>경도: <span id="longitudeDisplay">미선택</span></p>
+                </div>
+            </div>
 
-                kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
-                    var latLng = mouseEvent.latLng;
-                    var lat = latLng.getLat();
-                    var lng = latLng.getLng();
+            <!-- 제출 버튼 -->
+            <button type="submit">공지 생성</button>
+        </form>
+    </main>
 
-                    if (currentMarker) currentMarker.setMap(null);
+    <script>
+        let currentMarker = null;
 
-                    currentMarker = new kakao.maps.Marker({ position: latLng });
-                    currentMarker.setMap(map);
+        // 지도 초기화
+        function initMap() {
+            const mapContainer = document.getElementById('map');
+            const mapOption = {
+                center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울 중심 좌표
+                level: 3 // 확대 레벨
+            };
 
-                    document.getElementById("latitude").textContent = lat;
-                    document.getElementById("longitude").textContent = lng;
+            const map = new kakao.maps.Map(mapContainer, mapOption);
 
-                    geocoder.coord2Address(lng, lat, function(result, status) {
-                        if (status === kakao.maps.services.Status.OK) {
-                            document.getElementById("address").textContent = result[0].address.address_name;
-                        }
-                    });
+            // 지도 클릭 이벤트
+            kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+                const latLng = mouseEvent.latLng;
+                const lat = latLng.getLat();
+                const lng = latLng.getLng();
+
+                // 기존 마커 제거
+                if (currentMarker) {
+                    currentMarker.setMap(null);
+                }
+
+                // 새로운 마커 추가
+                currentMarker = new kakao.maps.Marker({
+                    position: latLng
                 });
-            }
+                currentMarker.setMap(map);
 
-            initMap();
-        </script>
-    </div>
+                // 값 업데이트
+                document.getElementById('latitudeInput').value = lat.toFixed(6);
+                document.getElementById('longitudeInput').value = lng.toFixed(6);
+                document.getElementById('latitudeDisplay').textContent = lat.toFixed(6);
+                document.getElementById('longitudeDisplay').textContent = lng.toFixed(6);
+            });
+        }
+
+        // 폼 제출 시 값 확인
+        document.getElementById('create-notice-form').addEventListener('submit', function(event) {
+            const latitude = document.getElementById('latitudeInput').value;
+            const longitude = document.getElementById('longitudeInput').value;
+
+            if (!latitude || !longitude) {
+                alert("지도를 클릭하여 위치를 선택해주세요.");
+                event.preventDefault();
+            }
+        });
+
+        // 지도 초기화 호출
+        initMap();
+    </script>
 </body>
 </html>

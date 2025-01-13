@@ -216,6 +216,17 @@
 
                     <div id="Notice1" class="tabcontent">
                         <div id="mapContent"></div>
+                        <section class="action-buttons">
+            <button class="wri-button" onclick="location.href='<%= request.getContextPath() %>/PartyNoticeForm?partyIdx=<%= request.getParameter("partyIdx") %>'">
+    글쓰기
+</button>
+			
+                        <button class="sha-button" onclick="sha">공유</button>
+                        <button class="ede-button" onclick="edi">수정</button>
+                        <button class="del-button" onclick="del">삭제</button>
+                        
+                    </div>
+                        <div id="mapContent"></div>
                     </div>
                 </div>
             </div>
